@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, type FormEvent } from "react";
-import { FORMSPREE_ID, LS_EMAIL_SUBSCRIBED as SUBSCRIBED_KEY } from "@/lib/constants";
+import { SUBSCRIBE_API, LS_EMAIL_SUBSCRIBED as SUBSCRIBED_KEY } from "@/lib/constants";
 
 export function InlineEmailCta({ message }: { message: string }) {
   const [subscribed, setSubscribed] = useState(false);
@@ -18,13 +18,13 @@ export function InlineEmailCta({ message }: { message: string }) {
     e.preventDefault();
     setSubmitting(true);
 
-    const data = new FormData(e.currentTarget);
+    const email = new FormData(e.currentTarget).get("email");
 
     try {
-      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+      const res = await fetch(SUBSCRIBE_API, {
         method: "POST",
-        body: data,
-        headers: { Accept: "application/json" },
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
       });
       if (res.ok) {
         setSubmitted(true);

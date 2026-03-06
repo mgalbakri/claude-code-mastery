@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, type FormEvent } from "react";
-import { FORMSPREE_ID, LS_EXIT_INTENT_SHOWN, LS_EMAIL_SUBSCRIBED, CHEAT_SHEET_PATH } from "@/lib/constants";
+import { SUBSCRIBE_API, LS_EXIT_INTENT_SHOWN, LS_EMAIL_SUBSCRIBED, CHEAT_SHEET_PATH } from "@/lib/constants";
 
 export function ExitIntentPopup() {
   const [visible, setVisible] = useState(false);
@@ -40,13 +40,13 @@ export function ExitIntentPopup() {
     e.preventDefault();
     setSubmitting(true);
 
-    const data = new FormData(e.currentTarget);
+    const email = new FormData(e.currentTarget).get("email");
 
     try {
-      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+      const res = await fetch(SUBSCRIBE_API, {
         method: "POST",
-        body: data,
-        headers: { Accept: "application/json" },
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
       });
       if (res.ok) {
         setSubmitted(true);

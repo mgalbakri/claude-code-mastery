@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { FORMSPREE_ID, CHEAT_SHEET_PATH } from "@/lib/constants";
+import { SUBSCRIBE_API, CHEAT_SHEET_PATH } from "@/lib/constants";
 
 export function EmailSignup() {
   const [submitted, setSubmitted] = useState(false);
@@ -11,13 +11,13 @@ export function EmailSignup() {
     e.preventDefault();
     setSubmitting(true);
 
-    const data = new FormData(e.currentTarget);
+    const email = new FormData(e.currentTarget).get("email");
 
     try {
-      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+      const res = await fetch(SUBSCRIBE_API, {
         method: "POST",
-        body: data,
-        headers: { Accept: "application/json" },
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
       });
       if (res.ok) {
         setSubmitted(true);

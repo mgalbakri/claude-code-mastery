@@ -9,6 +9,8 @@ dependencies = [
     "beautifulsoup4>=4.12.0",
     "pydantic>=2.0.0",
     "scikit-learn>=1.3.0",
+    "jinja2>=3.1.0",
+    "playwright>=1.40.0",
 ]
 
 [project.optional-dependencies]
@@ -21,6 +23,7 @@ dev = [
 [project.scripts]
 claude-code-mastery = "claude_code_mastery.server:main"
 claude-code-mastery-check = "claude_code_mastery.scheduler:main"
+claude-code-mastery-newsletter = "claude_code_mastery.newsletter:main"
 
 [tool.setuptools.packages.find]
 include = ["claude_code_mastery*"]

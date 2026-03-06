@@ -1,0 +1,67 @@
+name: Weekly Newsletter
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"  # Every Monday at 9:00 AM UTC
+  workflow_dispatch:       # Allow manual trigger
+
+permissions:
+  contents: read
+
+jobs:
+  send-newsletter:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -e .
+
+      - name: Install Playwright browsers
+        run: playwright install chromium --with-deps
+
+      - name: Run newsletter pipeline
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_AUDIENCE_ID: ${{ secrets.RESEND_AUDIENCE_ID }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          EMAIL_FROM: "Agent Code Academy <hello@agentcodeacademy.com>"
+          CURRICULUM_PATH: curriculum.md
+          OUTPUT_DIR: /tmp/newsletter-output
+        run: python -m claude_code_mastery.newsletter --send --output-dir "$OUTPUT_DIR" --verbose
+
+      - name: Upload newsletter artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: newsletter-${{ github.run_number }}
+          path: |
+            /tmp/newsletter-output/*.html
+            /tmp/newsletter-output/*.pdf
+          retention-days: 90
+
+      - name: Copy web version to site
+        if: success()
+        run: |
+          mkdir -p site/public/newsletter
+          cp /tmp/newsletter-output/issue-*.html site/public/newsletter/ 2>/dev/null || true
+
+      - name: Deploy site with newsletter archive
+        if: success()
+        working-directory: site
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          cp ../curriculum.md . 2>/dev/null || true
+          npx vercel deploy --prod --yes --force --token "$VERCEL_TOKEN"

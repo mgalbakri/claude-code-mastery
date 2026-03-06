@@ -401,10 +401,51 @@ async def run_scheduled_check() -> dict:
         if await send_email_notification(config, title, gaps_detail):
             result["notifications_sent"].append("email")
 
+    # --- Newsletter (if enabled and it's the right day) ---
+    if config.get("newsletter_enabled", False):
+        try:
+            newsletter_result = await _run_newsletter_if_due(config)
+            if newsletter_result:
+                result["newsletter"] = newsletter_result
+                if newsletter_result.get("success"):
+                    result["notifications_sent"].append("newsletter")
+        except Exception as e:
+            logger.exception("Newsletter send failed: %s", e)
+            result["errors"].append(f"Newsletter failed: {e}")
+
     config["last_scheduled_check"] = result["timestamp"]
     save_scheduler_config(config)
 
     return result
+
+
+async def _run_newsletter_if_due(config: dict) -> dict | None:
+    """Run the newsletter pipeline if it's the configured send day."""
+    from .newsletter import NewsletterConfig, run_newsletter_pipeline, load_newsletter_state
+
+    send_day = config.get("newsletter_day", 0)  # 0=Monday
+    if datetime.now(timezone.utc).weekday() != send_day:
+        return None
+
+    # Check if already sent today
+    nl_state = load_newsletter_state()
+    last_sent = nl_state.get("last_sent_date")
+    if last_sent:
+        last_date = datetime.fromisoformat(last_sent).date()
+        if last_date == datetime.now(timezone.utc).date():
+            logger.info("Newsletter already sent today, skipping")
+            return None
+
+    nl_config = NewsletterConfig(
+        resend_api_key=config.get("resend_api_key", ""),
+        audience_id=config.get("resend_audience_id", ""),
+        anthropic_api_key=config.get("anthropic_api_key", ""),
+    )
+
+    state = load_curriculum_state()
+    nl_config.curriculum_path = state.get("curriculum_path") or state.get("path") or ""
+
+    return await run_newsletter_pipeline(nl_config, send=True)
 
 
 # --- Auto-apply engine ---
@@ -723,6 +764,7 @@ def main():
     parser.add_argument("--interval", type=int, default=24, help="Check interval in hours (default: 24)")
     parser.add_argument("--weekly", action="store_true", help="Use weekly schedule (Mondays at 9 AM)")
     parser.add_argument("--auto-apply", action="store_true", help="Enable auto-applying high-priority updates")
+    parser.add_argument("--newsletter", action="store_true", help="Send the weekly newsletter now")
     args = parser.parse_args()
 
     if args.auto_apply:
@@ -730,6 +772,13 @@ def main():
         config["auto_apply"] = True
         save_scheduler_config(config)
         print("✅ Auto-apply enabled")
+
+    if args.newsletter:
+        from .newsletter import NewsletterConfig, run_newsletter_pipeline
+        nl_config = NewsletterConfig.from_env()
+        nl_result = asyncio.run(run_newsletter_pipeline(nl_config, send=True))
+        print(json.dumps(nl_result, indent=2))
+        return
 
     if args.install_launchd:
         print(install_launchd(args.interval, weekly=args.weekly))

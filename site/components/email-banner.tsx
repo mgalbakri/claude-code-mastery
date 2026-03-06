@@ -2,7 +2,7 @@
 
 import { useState, useEffect, type FormEvent } from "react";
 import {
-  FORMSPREE_ID,
+  SUBSCRIBE_API,
   LS_EMAIL_DISMISSED as DISMISSED_KEY,
   LS_EMAIL_SUBSCRIBED as SUBSCRIBED_KEY,
   CHEAT_SHEET_PATH,
@@ -30,13 +30,13 @@ export function EmailBanner() {
     e.preventDefault();
     setSubmitting(true);
 
-    const data = new FormData(e.currentTarget);
+    const email = new FormData(e.currentTarget).get("email");
 
     try {
-      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+      const res = await fetch(SUBSCRIBE_API, {
         method: "POST",
-        body: data,
-        headers: { Accept: "application/json" },
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
       });
       if (res.ok) {
         setSubmitted(true);

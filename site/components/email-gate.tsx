@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useEmailStatus } from "@/lib/hooks/use-email-status";
 import {
-  FORMSPREE_ID,
+  SUBSCRIBE_API,
   FREE_WEEKS,
   CHEAT_SHEET_PATH,
 } from "@/lib/constants";
@@ -32,13 +32,13 @@ export function EmailGate({ weekNumber }: EmailGateProps) {
     e.preventDefault();
     setSubmitting(true);
 
-    const data = new FormData(e.currentTarget);
+    const email = new FormData(e.currentTarget).get("email");
 
     try {
-      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+      const res = await fetch(SUBSCRIBE_API, {
         method: "POST",
-        body: data,
-        headers: { Accept: "application/json" },
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
       });
       if (res.ok) {
         setSubmitted(true);

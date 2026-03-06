@@ -706,6 +706,85 @@ async def curriculum_scheduler(params: SchedulerInput) -> str:
         return f"Error: {type(e).__name__}: {str(e)}"
 
 
+class SendNewsletterInput(BaseModel):
+    """Input for sending the weekly newsletter."""
+    action: str = Field(
+        default="preview",
+        description="Action: 'preview' (generate without sending), 'send' (send to all subscribers), 'test' (send to test_email only)",
+    )
+    test_email: Optional[str] = Field(
+        default=None,
+        description="Email address to send a test newsletter to (used with action='test')",
+    )
+
+
+@mcp.tool(
+    name="curriculum_send_newsletter",
+    annotations={
+        "title": "Generate & Send Weekly Newsletter",
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "idempotentHint": False,
+        "openWorldHint": True,
+    }
+)
+async def curriculum_send_newsletter(params: SendNewsletterInput) -> str:
+    """Generate and optionally send the weekly newsletter PDF.
+
+    Collects recent updates, editorializes the content, renders a
+    magazine-style PDF, and delivers it via Resend.
+
+    Actions:
+    - preview: Generate HTML/PDF locally without sending
+    - send: Send to all newsletter subscribers
+    - test: Send to a single test email address
+
+    Args:
+        params (SendNewsletterInput): Newsletter parameters
+
+    Returns:
+        str: Summary of the newsletter generation/delivery
+    """
+    from .newsletter import NewsletterConfig, run_newsletter_pipeline
+    try:
+        config = NewsletterConfig.from_env()
+
+        result = await run_newsletter_pipeline(
+            config=config,
+            send=params.action == "send",
+            test_email=params.test_email or "" if params.action == "test" else "",
+            preview_only=params.action == "preview",
+        )
+
+        if result.get("skipped"):
+            return f"# Newsletter Skipped\n\nNo updates found this week."
+
+        lines = [
+            f"# Newsletter #{result.get('issue_number', '?')}",
+            f"",
+            f"**Headline:** {result.get('headline', 'N/A')}",
+            f"**Updates:** {result.get('update_count', 0)}",
+            f"**HTML:** {result.get('html_path', 'N/A')}",
+            f"**PDF:** {result.get('pdf_path', 'N/A')}",
+        ]
+
+        if result.get("send"):
+            send = result["send"]
+            lines.append(f"**Sent:** {send.get('sent', 0)} / {send.get('total_recipients', 0)}")
+            if send.get("failed"):
+                lines.append(f"**Failed:** {send['failed']}")
+        elif result.get("preview"):
+            lines.append(f"\n*Preview mode — open the HTML/PDF files to review.*")
+        elif result.get("note"):
+            lines.append(f"\n*{result['note']}*")
+
+        return "\n".join(lines)
+
+    except Exception as e:
+        logger.exception("Newsletter error")
+        return f"Error: {type(e).__name__}: {str(e)}"
+
+
 # --- Entry Point ---
 
 def main():

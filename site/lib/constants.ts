@@ -1,5 +1,5 @@
-// Formspree
-export const FORMSPREE_ID = "mgolkeaa";
+// Subscription API
+export const SUBSCRIBE_API = "/api/subscribe";
 
 // localStorage keys
 export const LS_EMAIL_SUBSCRIBED = "ccm-email-subscribed";

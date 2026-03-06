@@ -34,8 +34,8 @@ test.describe("Forms: Homepage Email Signup", () => {
   });
 
   test("form submission shows success (mocked)", async ({ page }) => {
-    // Mock Formspree endpoint to return success
-    await page.route("**/formspree.io/**", (route) => {
+    // Mock subscribe API endpoint to return success
+    await page.route("**/api/subscribe", (route) => {
       route.fulfill({
         status: 200,
         contentType: "application/json",
