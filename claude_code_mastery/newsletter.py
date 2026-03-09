@@ -451,23 +451,29 @@ async def send_newsletter(
 
     from_email = config.from_email.strip()
 
+    # Build attachment once, shared across all recipients
+    attachment = {"filename": filename, "content": pdf_b64}
+
     async with httpx.AsyncClient(timeout=30.0) as client:
         for i in range(0, len(recipients), batch_size):
             batch = recipients[i : i + batch_size]
             # Resend batch API expects an array of individual email objects
+            # Each recipient gets a personalized unsubscribe link
             payload = [
                 {
                     "from": from_email,
                     "to": [recipient],
                     "subject": subject,
-                    "html": issue.html_content,
-                    "attachments": [
-                        {"filename": filename, "content": pdf_b64},
-                    ],
+                    "html": issue.html_content.replace(
+                        f"{SITE_URL}/api/unsubscribe",
+                        f"{SITE_URL}/api/unsubscribe?email={recipient}",
+                    ),
+                    "attachments": [attachment],
                 }
                 for recipient in batch
             ]
 
+            resp = None
             try:
                 resp = await client.post(
                     "https://api.resend.com/emails/batch",
@@ -477,7 +483,8 @@ async def send_newsletter(
                 resp.raise_for_status()
                 sent += len(batch)
             except Exception as e:
-                logger.error("Batch send failed (HTTP %s): %s", getattr(resp, 'status_code', '?'), e)
+                status = resp.status_code if resp is not None else "N/A"
+                logger.error("Batch send failed (HTTP %s): %s", status, e)
                 failed += len(batch)
 
     return {

@@ -55,7 +55,17 @@ export async function GET(request: Request) {
   }
 }
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function unsubscribePage(message: string): string {
+  const safeMessage = escapeHtml(message);
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,7 +91,7 @@ function unsubscribePage(message: string): string {
 <body>
   <div class="card">
     <h1>Agent Code Academy</h1>
-    <p>${message}</p>
+    <p>${safeMessage}</p>
     <a href="https://agentcodeacademy.com">Back to course</a>
   </div>
 </body>
