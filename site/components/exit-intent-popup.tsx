@@ -1,12 +1,15 @@
 "use client";
 
-import { useState, useEffect, useCallback, type FormEvent } from "react";
+import { useState, useEffect, useCallback, useRef, type FormEvent } from "react";
 import { SUBSCRIBE_API, LS_EXIT_INTENT_SHOWN, LS_EMAIL_SUBSCRIBED, CHEAT_SHEET_PATH } from "@/lib/constants";
+import { getStoredReferrer } from "@/lib/referral";
+import { ReferralPrompt } from "@/components/referral-prompt";
 
 export function ExitIntentPopup() {
   const [visible, setVisible] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const emailRef = useRef("");
 
   const handleMouseLeave = useCallback((e: MouseEvent) => {
     // Only trigger when cursor leaves the top of the viewport
@@ -40,13 +43,15 @@ export function ExitIntentPopup() {
     e.preventDefault();
     setSubmitting(true);
 
-    const email = new FormData(e.currentTarget).get("email");
+    const email = new FormData(e.currentTarget).get("email") as string;
+    emailRef.current = email;
+    const referrer = getStoredReferrer();
 
     try {
       const res = await fetch(SUBSCRIBE_API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, referrer }),
       });
       if (res.ok) {
         setSubmitted(true);
@@ -98,6 +103,7 @@ export function ExitIntentPopup() {
             >
               &#8595; Download Cheat Sheet (PDF)
             </a>
+            <ReferralPrompt email={emailRef.current} variant="compact" />
           </>
         ) : (
           <>

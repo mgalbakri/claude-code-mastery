@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getAllAppendices, getAppendix } from "@/lib/parse-curriculum";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
 import { EmailBanner } from "@/components/email-banner";
+import { ShareButtons } from "@/components/share-buttons";
 
 interface AppendixPageProps {
   params: Promise<{ letter: string }>;
@@ -21,6 +22,8 @@ export async function generateMetadata({ params }: AppendixPageProps) {
   const title = `Appendix ${appendix.letter}: ${appendix.title}`;
   const description = `${appendix.title} — Reference material from the 12-week AI coding course at Agent Code Academy.`;
 
+  const ogImage = `/og?title=${encodeURIComponent(appendix.title)}&week=${appendix.letter}&phase=3&type=appendix`;
+
   return {
     title,
     description,
@@ -29,11 +32,13 @@ export async function generateMetadata({ params }: AppendixPageProps) {
       description,
       url: `https://agentcodeacademy.com/appendix/${appendix.letter.toLowerCase()}`,
       type: "article",
+      images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title: `${title} — Agent Code Academy`,
       description,
+      images: [ogImage],
     },
     alternates: {
       canonical: `https://agentcodeacademy.com/appendix/${appendix.letter.toLowerCase()}`,
@@ -87,6 +92,12 @@ export default async function AppendixPage({ params }: AppendixPageProps) {
       <section className="mb-12">
         <MarkdownRenderer content={appendix.content} />
       </section>
+
+      {/* Share */}
+      <ShareButtons
+        url={`/appendix/${letter.toLowerCase()}`}
+        title={`Appendix ${appendix.letter}: ${appendix.title}`}
+      />
 
       {/* Navigation */}
       <nav className="flex items-center justify-between pt-8 border-t border-slate-200 dark:border-slate-800">

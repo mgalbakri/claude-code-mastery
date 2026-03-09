@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    @page {
+      size: Letter;
+      margin: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #0a0a0a;
+      color: #e5e5e5;
+      line-height: 1.5;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .page {
+      width: 8.5in;
+      min-height: 11in;
+      padding: 0.6in 0.65in;
+      background: #0a0a0a;
+      position: relative;
+      break-after: page;
+      page-break-after: always;
+    }
+
+    .page:last-child {
+      break-after: auto;
+      page-break-after: auto;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #1e293b;
+    }
+
+    .logo {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #a78bfa;
+    }
+
+    .page-label {
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    /* Section title */
+    h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #f8fafc;
+      margin-bottom: 4px;
+    }
+
+    h1 .accent {
+      background: linear-gradient(135deg, #a78bfa, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-bottom: 20px;
+    }
+
+    /* Two-column layout */
+    .cols {
+      display: flex;
+      gap: 24px;
+    }
+
+    .col {
+      flex: 1;
+    }
+
+    /* Card */
+    .card {
+      background: #111827;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+
+    .card h3 {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #a78bfa;
+      margin-bottom: 8px;
+    }
+
+    .card.green h3 { color: #34d399; }
+    .card.blue h3 { color: #60a5fa; }
+    .card.amber h3 { color: #fbbf24; }
+
+    /* Command table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11.5px;
+    }
+
+    table td {
+      padding: 3px 0;
+      vertical-align: top;
+    }
+
+    table td:first-child {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      color: #e2e8f0;
+      white-space: nowrap;
+      padding-right: 12px;
+      width: 40%;
+    }
+
+    table td:last-child {
+      color: #94a3b8;
+    }
+
+    /* Code block */
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      background: #0d1117;
+      border: 1px solid #1e293b;
+      border-radius: 4px;
+      padding: 1px 5px;
+      color: #e2e8f0;
+    }
+
+    pre {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      background: #0d1117;
+      border: 1px solid #1e293b;
+      border-radius: 6px;
+      padding: 10px 12px;
+      color: #e2e8f0;
+      line-height: 1.6;
+      white-space: pre;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+
+    .tip {
+      background: linear-gradient(135deg, rgba(168,139,250,0.08), rgba(99,102,241,0.05));
+      border: 1px solid rgba(168,139,250,0.2);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-top: 12px;
+    }
+
+    .tip p {
+      font-size: 11.5px;
+      color: #cbd5e1;
+    }
+
+    .tip strong {
+      color: #a78bfa;
+    }
+
+    /* Footer */
+    .footer {
+      position: absolute;
+      bottom: 0.5in;
+      left: 0.65in;
+      right: 0.65in;
+      text-align: center;
+      font-size: 10px;
+      color: #475569;
+    }
+
+    .footer a {
+      color: #818cf8;
+      text-decoration: none;
+    }
+
+    /* Bullet list */
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul li {
+      font-size: 11.5px;
+      color: #cbd5e1;
+      padding: 2px 0;
+      padding-left: 14px;
+      position: relative;
+    }
+
+    ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 9px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #475569;
+    }
+  </style>
+</head>
+<body>
+
+<!-- PAGE 1: Terminal & Navigation -->
+<div class="page">
+  <div class="header">
+    <div class="logo">Agent Code Academy</div>
+    <div class="page-label">AI Coding Cheat Sheet &mdash; Page 1 of 4</div>
+  </div>
+
+  <h1>Essential <span class="accent">Terminal Commands</span></h1>
+  <p class="subtitle">Everything you need to navigate your filesystem and manage files from the command line.</p>
+
+  <div class="cols">
+    <div class="col">
+      <div class="card">
+        <h3>Navigation</h3>
+        <table>
+          <tr><td>pwd</td><td>Print current directory</td></tr>
+          <tr><td>ls</td><td>List files in directory</td></tr>
+          <tr><td>ls -la</td><td>List all files with details</td></tr>
+          <tr><td>cd folder</td><td>Enter a folder</td></tr>
+          <tr><td>cd ..</td><td>Go up one level</td></tr>
+          <tr><td>cd ~</td><td>Go to home directory</td></tr>
+          <tr><td>cd -</td><td>Go to previous directory</td></tr>
+        </table>
+      </div>
+
+      <div class="card green">
+        <h3>Create & Copy</h3>
+        <table>
+          <tr><td>mkdir name</td><td>Create a folder</td></tr>
+          <tr><td>mkdir -p a/b/c</td><td>Create nested folders</td></tr>
+          <tr><td>touch file.txt</td><td>Create an empty file</td></tr>
+          <tr><td>cp src dest</td><td>Copy a file</td></tr>
+          <tr><td>cp -r dir/ dest/</td><td>Copy a directory</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card blue">
+        <h3>Move & Delete</h3>
+        <table>
+          <tr><td>mv old new</td><td>Move or rename</td></tr>
+          <tr><td>rm file</td><td>Delete a file</td></tr>
+          <tr><td>rm -rf dir/</td><td>Delete a directory</td></tr>
+        </table>
+      </div>
+
+      <div class="card amber">
+        <h3>View & Search</h3>
+        <table>
+          <tr><td>cat file</td><td>Print file contents</td></tr>
+          <tr><td>head -20 file</td><td>First 20 lines</td></tr>
+          <tr><td>tail -20 file</td><td>Last 20 lines</td></tr>
+          <tr><td>grep "text" file</td><td>Search in file</td></tr>
+          <tr><td>grep -r "text" .</td><td>Search recursively</td></tr>
+          <tr><td>find . -name "*.ts"</td><td>Find files by pattern</td></tr>
+        </table>
+      </div>
+
+      <div class="tip">
+        <p><strong>Pro tip:</strong> Press <code>Tab</code> to auto-complete file and folder names. Press <code>Ctrl+R</code> to search your command history.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <a href="https://agentcodeacademy.com">agentcodeacademy.com</a> &mdash; Free 12-week AI coding course
+  </div>
+</div>
+
+<!-- PAGE 2: Claude Code Prompts -->
+<div class="page">
+  <div class="header">
+    <div class="logo">Agent Code Academy</div>
+    <div class="page-label">AI Coding Cheat Sheet &mdash; Page 2 of 4</div>
+  </div>
+
+  <h1>Claude Code <span class="accent">Prompt Patterns</span></h1>
+  <p class="subtitle">Write better prompts to get better code. These patterns work in Claude Code and any AI coding tool.</p>
+
+  <div class="cols">
+    <div class="col">
+      <div class="card">
+        <h3>Effective Prompts</h3>
+        <ul>
+          <li>Be specific: "Add a login form with email and password fields" not "add auth"</li>
+          <li>Provide context: "In the Express server at server.ts, add a GET /api/users endpoint"</li>
+          <li>State constraints: "Use only standard library, no external packages"</li>
+          <li>Ask for explanations: "Explain each step as you implement it"</li>
+        </ul>
+      </div>
+
+      <div class="card green">
+        <h3>Common Prompt Templates</h3>
+        <ul>
+          <li><strong>New feature:</strong> "Create a [component] that [does X]. It should [constraints]."</li>
+          <li><strong>Bug fix:</strong> "The [feature] is [broken behavior]. Expected: [correct behavior]. Fix it."</li>
+          <li><strong>Refactor:</strong> "Refactor [file] to [pattern]. Keep the same behavior."</li>
+          <li><strong>Tests:</strong> "Write tests for [function] covering [edge cases]."</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card blue">
+        <h3>Claude Code Slash Commands</h3>
+        <table>
+          <tr><td>/init</td><td>Create a CLAUDE.md for your project</td></tr>
+          <tr><td>/compact</td><td>Summarize conversation to save context</td></tr>
+          <tr><td>/clear</td><td>Reset conversation</td></tr>
+          <tr><td>/cost</td><td>Show token usage</td></tr>
+          <tr><td>/help</td><td>Show all commands</td></tr>
+          <tr><td>/vim</td><td>Toggle vim mode</td></tr>
+        </table>
+      </div>
+
+      <div class="card amber">
+        <h3>Keyboard Shortcuts</h3>
+        <table>
+          <tr><td>Esc</td><td>Cancel current action</td></tr>
+          <tr><td>Tab</td><td>Accept suggestion</td></tr>
+          <tr><td>Shift+Tab</td><td>Toggle auto-accept mode</td></tr>
+          <tr><td>Ctrl+C</td><td>Stop generation</td></tr>
+        </table>
+      </div>
+
+      <div class="tip">
+        <p><strong>Pro tip:</strong> Start your project with <code>claude /init</code> to generate a CLAUDE.md. This file teaches Claude about your project's conventions, tech stack, and patterns.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <a href="https://agentcodeacademy.com">agentcodeacademy.com</a> &mdash; Free 12-week AI coding course
+  </div>
+</div>
+
+<!-- PAGE 3: Git Workflow -->
+<div class="page">
+  <div class="header">
+    <div class="logo">Agent Code Academy</div>
+    <div class="page-label">AI Coding Cheat Sheet &mdash; Page 3 of 4</div>
+  </div>
+
+  <h1>Git <span class="accent">Quick Reference</span></h1>
+  <p class="subtitle">Version control essentials. Every command you need for daily Git workflow.</p>
+
+  <div class="cols">
+    <div class="col">
+      <div class="card">
+        <h3>Setup & Init</h3>
+        <table>
+          <tr><td>git init</td><td>Initialize a new repo</td></tr>
+          <tr><td>git clone url</td><td>Clone a remote repo</td></tr>
+          <tr><td>git status</td><td>Show working tree status</td></tr>
+          <tr><td>git log --oneline</td><td>Compact commit history</td></tr>
+        </table>
+      </div>
+
+      <div class="card green">
+        <h3>Stage & Commit</h3>
+        <table>
+          <tr><td>git add file</td><td>Stage a specific file</td></tr>
+          <tr><td>git add .</td><td>Stage all changes</td></tr>
+          <tr><td>git commit -m "msg"</td><td>Commit with message</td></tr>
+          <tr><td>git diff</td><td>Show unstaged changes</td></tr>
+          <tr><td>git diff --staged</td><td>Show staged changes</td></tr>
+        </table>
+      </div>
+
+      <div class="card blue">
+        <h3>Branches</h3>
+        <table>
+          <tr><td>git branch</td><td>List branches</td></tr>
+          <tr><td>git branch name</td><td>Create new branch</td></tr>
+          <tr><td>git checkout name</td><td>Switch to branch</td></tr>
+          <tr><td>git checkout -b name</td><td>Create &amp; switch</td></tr>
+          <tr><td>git merge name</td><td>Merge branch into current</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card amber">
+        <h3>Remote</h3>
+        <table>
+          <tr><td>git push</td><td>Push to remote</td></tr>
+          <tr><td>git pull</td><td>Pull from remote</td></tr>
+          <tr><td>git push -u origin main</td><td>Set upstream &amp; push</td></tr>
+          <tr><td>git remote -v</td><td>Show remotes</td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3>Undo & Fix</h3>
+        <table>
+          <tr><td>git restore file</td><td>Discard changes</td></tr>
+          <tr><td>git restore --staged f</td><td>Unstage a file</td></tr>
+          <tr><td>git stash</td><td>Stash changes</td></tr>
+          <tr><td>git stash pop</td><td>Restore stashed changes</td></tr>
+          <tr><td>git reset HEAD~1</td><td>Undo last commit (keep files)</td></tr>
+        </table>
+      </div>
+
+      <div class="tip">
+        <p><strong>Pro tip:</strong> Use <code>git commit -m "feat: description"</code> with conventional commit prefixes: <code>feat:</code>, <code>fix:</code>, <code>docs:</code>, <code>refactor:</code>, <code>test:</code></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <a href="https://agentcodeacademy.com">agentcodeacademy.com</a> &mdash; Free 12-week AI coding course
+  </div>
+</div>
+
+<!-- PAGE 4: CLAUDE.md & MCP -->
+<div class="page">
+  <div class="header">
+    <div class="logo">Agent Code Academy</div>
+    <div class="page-label">AI Coding Cheat Sheet &mdash; Page 4 of 4</div>
+  </div>
+
+  <h1>CLAUDE.md <span class="accent">& MCP Quick Start</span></h1>
+  <p class="subtitle">Configure Claude Code for your project and extend it with MCP servers.</p>
+
+  <div class="cols">
+    <div class="col">
+      <div class="card">
+        <h3>CLAUDE.md Starter Template</h3>
+        <pre># Project Name
+
+## Tech Stack
+- Language: TypeScript
+- Framework: Next.js 16
+- Database: Supabase (PostgreSQL)
+- Styling: Tailwind CSS 4
+
+## Conventions
+- Use functional components with hooks
+- Prefer named exports
+- Tests live next to source files
+
+## Commands
+- `npm run dev` — start dev server
+- `npm test` — run tests
+- `npm run build` — production build</pre>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card green">
+        <h3>Where CLAUDE.md Files Go</h3>
+        <table>
+          <tr><td>~/CLAUDE.md</td><td>Global (all projects)</td></tr>
+          <tr><td>./CLAUDE.md</td><td>Project root (shared)</td></tr>
+          <tr><td>./.claude/CLAUDE.md</td><td>Personal (gitignored)</td></tr>
+          <tr><td>./src/CLAUDE.md</td><td>Directory-specific</td></tr>
+        </table>
+      </div>
+
+      <div class="card blue">
+        <h3>MCP Server Basics</h3>
+        <ul>
+          <li><strong>What:</strong> Plugins that give Claude new tools (database access, APIs, etc.)</li>
+          <li><strong>Where:</strong> Configure in <code>.claude/settings.json</code></li>
+          <li><strong>How:</strong> <code>claude mcp add name command</code></li>
+        </ul>
+      </div>
+
+      <div class="card amber">
+        <h3>Common MCP Servers</h3>
+        <table>
+          <tr><td>filesystem</td><td>Read/write files outside project</td></tr>
+          <tr><td>postgres</td><td>Query databases directly</td></tr>
+          <tr><td>github</td><td>PR reviews, issues, actions</td></tr>
+          <tr><td>playwright</td><td>Browser automation &amp; testing</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip" style="margin-top: 16px;">
+    <p><strong>Keep learning:</strong> This cheat sheet covers Weeks 1&ndash;3 of the free 12-week course. Visit <strong><a href="https://agentcodeacademy.com" style="color: #a78bfa; text-decoration: none;">agentcodeacademy.com</a></strong> for the full curriculum including databases, APIs, authentication, testing, and advanced MCP server development.</p>
+  </div>
+
+  <div class="footer">
+    <a href="https://agentcodeacademy.com">agentcodeacademy.com</a> &mdash; Free 12-week AI coding course
+  </div>
+</div>
+
+</body>
+</html>

@@ -9,6 +9,7 @@ import { MobileNav } from "@/components/mobile-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { AuthButton } from "@/components/auth-button";
 import { ExitIntentPopup } from "@/components/exit-intent-popup";
+import { ReferralCapture } from "@/components/referral-capture";
 import { AuthProvider } from "@/lib/auth-context";
 import { ProgressProvider } from "@/lib/progress-context";
 import "./globals.css";
@@ -55,12 +56,21 @@ export const metadata: Metadata = {
     siteName: "Agent Code Academy",
     type: "website",
     locale: "en_US",
+    images: [
+      {
+        url: "/og?title=12-Week%20AI%20Coding%20Course",
+        width: 1200,
+        height: 630,
+        alt: "Agent Code Academy — 12-Week AI Coding Course",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Agent Code Academy — 12-Week AI Coding Course",
     description:
       "Go from zero coding knowledge to AI coding expert in 12 weeks. Start free, go Pro when ready. Self-paced, always up-to-date.",
+    images: ["/og?title=12-Week%20AI%20Coding%20Course"],
   },
   robots: {
     index: true,
@@ -161,6 +171,7 @@ export default function RootLayout({
                 </div>
               </div>
               <ExitIntentPopup />
+              <ReferralCapture />
             </ProgressProvider>
           </AuthProvider>
         </ThemeProvider>

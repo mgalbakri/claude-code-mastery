@@ -1,17 +1,20 @@
 "use client";
 
-import { useState, useEffect, type FormEvent } from "react";
+import { useState, useEffect, useRef, type FormEvent } from "react";
 import {
   SUBSCRIBE_API,
   LS_EMAIL_DISMISSED as DISMISSED_KEY,
   LS_EMAIL_SUBSCRIBED as SUBSCRIBED_KEY,
   CHEAT_SHEET_PATH,
 } from "@/lib/constants";
+import { getStoredReferrer } from "@/lib/referral";
+import { ReferralPrompt } from "@/components/referral-prompt";
 
 export function EmailBanner() {
   const [visible, setVisible] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const emailRef = useRef("");
 
   useEffect(() => {
     const dismissed = localStorage.getItem(DISMISSED_KEY);
@@ -30,19 +33,21 @@ export function EmailBanner() {
     e.preventDefault();
     setSubmitting(true);
 
-    const email = new FormData(e.currentTarget).get("email");
+    const email = new FormData(e.currentTarget).get("email") as string;
+    emailRef.current = email;
+    const referrer = getStoredReferrer();
 
     try {
       const res = await fetch(SUBSCRIBE_API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, referrer }),
       });
       if (res.ok) {
         setSubmitted(true);
         localStorage.setItem(SUBSCRIBED_KEY, "1");
         localStorage.setItem(DISMISSED_KEY, "1");
-        setTimeout(() => setVisible(false), 3000);
+        // Don't auto-hide — let them see the referral prompt
       }
     } catch {
       // Falls back gracefully
@@ -77,6 +82,7 @@ export function EmailBanner() {
           >
             &#8595; Download AI Coding Cheat Sheet (PDF)
           </a>
+          <ReferralPrompt email={emailRef.current} variant="compact" />
         </div>
       ) : (
         <div className="flex flex-col sm:flex-row sm:items-center gap-3">

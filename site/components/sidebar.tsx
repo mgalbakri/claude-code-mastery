@@ -127,6 +127,32 @@ export function Sidebar({ phases, appendices }: SidebarProps) {
         </div>
       )}
 
+      {/* Newsletter */}
+      <div className="mb-5">
+        <Link
+          href="/newsletter"
+          className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
+            pathname === "/newsletter" || pathname.startsWith("/newsletter/")
+              ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-medium border-l-2 border-indigo-500"
+              : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:text-slate-900 dark:hover:text-slate-200"
+          }`}
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            className="flex-shrink-0"
+          >
+            <rect x="1" y="3" width="14" height="10" rx="1.5" />
+            <path d="M1 5l7 4 7-4" />
+          </svg>
+          Newsletter
+        </Link>
+      </div>
+
       {/* Certificate link (when all complete) */}
       {completedWeeks.length === TOTAL_WEEKS && (
         <div className="mb-5">

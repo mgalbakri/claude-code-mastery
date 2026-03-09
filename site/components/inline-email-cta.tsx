@@ -1,12 +1,15 @@
 "use client";
 
-import { useState, useEffect, type FormEvent } from "react";
+import { useState, useEffect, useRef, type FormEvent } from "react";
 import { SUBSCRIBE_API, LS_EMAIL_SUBSCRIBED as SUBSCRIBED_KEY } from "@/lib/constants";
+import { getStoredReferrer } from "@/lib/referral";
+import { ReferralPrompt } from "@/components/referral-prompt";
 
 export function InlineEmailCta({ message }: { message: string }) {
   const [subscribed, setSubscribed] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const emailRef = useRef("");
 
   useEffect(() => {
     if (localStorage.getItem(SUBSCRIBED_KEY)) {
@@ -18,13 +21,15 @@ export function InlineEmailCta({ message }: { message: string }) {
     e.preventDefault();
     setSubmitting(true);
 
-    const email = new FormData(e.currentTarget).get("email");
+    const email = new FormData(e.currentTarget).get("email") as string;
+    emailRef.current = email;
+    const referrer = getStoredReferrer();
 
     try {
       const res = await fetch(SUBSCRIBE_API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, referrer }),
       });
       if (res.ok) {
         setSubmitted(true);
@@ -42,8 +47,11 @@ export function InlineEmailCta({ message }: { message: string }) {
 
   if (submitted) {
     return (
-      <div className="my-6 py-3 text-center text-sm font-medium text-indigo-600 dark:text-indigo-400">
-        Subscribed! We&apos;ll keep you posted.
+      <div className="my-6 py-3 text-center">
+        <p className="text-sm font-medium text-indigo-600 dark:text-indigo-400">
+          Subscribed! We&apos;ll keep you posted.
+        </p>
+        <ReferralPrompt email={emailRef.current} variant="compact" />
       </div>
     );
   }

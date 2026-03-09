@@ -7,6 +7,7 @@ import { EmailGate } from "@/components/email-gate";
 import { WeekCompleteButton } from "@/components/week-complete-button";
 import { PremiumGate } from "@/components/premium-gate";
 import { ContextualToolCta } from "@/components/contextual-tool-cta";
+import { ShareButtons } from "@/components/share-buttons";
 
 interface WeekPageProps {
   params: Promise<{ number: string }>;
@@ -26,6 +27,8 @@ export async function generateMetadata({ params }: WeekPageProps) {
   const description =
     week.objective || week.subtitle || `Week ${week.number} of the 12-week AI coding course at Agent Code Academy.`;
 
+  const ogImage = `/og?title=${encodeURIComponent(week.title)}&week=${week.number}&phase=${week.phase}&type=week`;
+
   return {
     title,
     description,
@@ -34,11 +37,13 @@ export async function generateMetadata({ params }: WeekPageProps) {
       description,
       url: `https://agentcodeacademy.com/week/${week.number}`,
       type: "article",
+      images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title: `${title} — Agent Code Academy`,
       description,
+      images: [ogImage],
     },
     alternates: {
       canonical: `https://agentcodeacademy.com/week/${week.number}`,
@@ -194,6 +199,13 @@ export default async function WeekPage({ params }: WeekPageProps) {
 
       {/* Tool Recommendations */}
       <ContextualToolCta weekNumber={weekNum} />
+
+      {/* Share */}
+      <ShareButtons
+        url={`/week/${weekNum}`}
+        title={`Week ${weekNum}: ${week.title}`}
+        text={`I'm learning AI coding with Claude Code — Week ${weekNum} covers ${week.title}. Free course:`}
+      />
 
       {/* Navigation */}
       <nav className="flex items-center justify-between pt-8 border-t border-slate-200 dark:border-slate-800/50">

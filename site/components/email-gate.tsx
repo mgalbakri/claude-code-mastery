@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useRef, type FormEvent } from "react";
 import { useEmailStatus } from "@/lib/hooks/use-email-status";
 import {
   SUBSCRIBE_API,
   FREE_WEEKS,
   CHEAT_SHEET_PATH,
 } from "@/lib/constants";
+import { getStoredReferrer } from "@/lib/referral";
+import { ReferralPrompt } from "@/components/referral-prompt";
 
 interface EmailGateProps {
   weekNumber: number;
@@ -17,6 +19,7 @@ export function EmailGate({ weekNumber }: EmailGateProps) {
     useEmailStatus();
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const emailRef = useRef("");
 
   // Don't show on free weeks, if already subscribed, or if skipped
   if (
@@ -32,13 +35,15 @@ export function EmailGate({ weekNumber }: EmailGateProps) {
     e.preventDefault();
     setSubmitting(true);
 
-    const email = new FormData(e.currentTarget).get("email");
+    const email = new FormData(e.currentTarget).get("email") as string;
+    emailRef.current = email;
+    const referrer = getStoredReferrer();
 
     try {
       const res = await fetch(SUBSCRIBE_API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, referrer }),
       });
       if (res.ok) {
         setSubmitted(true);
@@ -68,6 +73,7 @@ export function EmailGate({ weekNumber }: EmailGateProps) {
         >
           &#8595; Download Cheat Sheet (PDF)
         </a>
+        <ReferralPrompt email={emailRef.current} />
       </div>
     );
   }

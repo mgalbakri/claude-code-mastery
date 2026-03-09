@@ -1,23 +1,28 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useRef, type FormEvent } from "react";
 import { SUBSCRIBE_API, CHEAT_SHEET_PATH } from "@/lib/constants";
+import { getStoredReferrer } from "@/lib/referral";
+import { ReferralPrompt } from "@/components/referral-prompt";
 
 export function EmailSignup() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const emailRef = useRef("");
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSubmitting(true);
 
-    const email = new FormData(e.currentTarget).get("email");
+    const email = new FormData(e.currentTarget).get("email") as string;
+    emailRef.current = email;
+    const referrer = getStoredReferrer();
 
     try {
       const res = await fetch(SUBSCRIBE_API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, referrer }),
       });
       if (res.ok) {
         setSubmitted(true);
@@ -46,6 +51,7 @@ export function EmailSignup() {
         >
           &#8595; Download AI Coding Cheat Sheet (PDF)
         </a>
+        <ReferralPrompt email={emailRef.current} />
       </section>
     );
   }

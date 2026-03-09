@@ -13,7 +13,7 @@ function getResend(): Resend {
 
 export async function POST(request: Request) {
   try {
-    const { email } = await request.json();
+    const { email, referrer } = await request.json();
 
     if (!email || typeof email !== "string" || !email.includes("@")) {
       return NextResponse.json(
@@ -32,11 +32,26 @@ export async function POST(request: Request) {
     }
 
     const resend = getResend();
-    await resend.contacts.create({
-      email: email.trim().toLowerCase(),
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // Build contact data — attach referrer code if present
+    const contactData: {
+      email: string;
+      audienceId: string;
+      unsubscribed: boolean;
+      firstName?: string;
+    } = {
+      email: normalizedEmail,
       audienceId,
       unsubscribed: false,
-    });
+    };
+
+    // Store referrer in firstName field as metadata (Resend doesn't have custom fields)
+    if (referrer && typeof referrer === "string" && referrer.length >= 4) {
+      contactData.firstName = `ref:${referrer}`;
+    }
+
+    await resend.contacts.create(contactData);
 
     return NextResponse.json({ ok: true });
   } catch (error) {
