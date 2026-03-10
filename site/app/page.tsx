@@ -192,40 +192,13 @@ export default function HomePage() {
         </p>
       </section>
 
-      {/* Support This Project */}
-      <section className="mt-24 p-6 sm:p-8 rounded-xl border border-slate-200 dark:border-slate-800/50 text-center">
-        <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
-          Support This Project
-        </h2>
-        <p className="text-sm text-slate-600 dark:text-slate-400 max-w-md mx-auto mb-5">
-          The entire course is 100% free during early access. If it&apos;s
-          helped you, consider buying me a coffee to keep it growing.
-        </p>
-        <a
-          href="https://buymeacoffee.com/curriculumbuilder"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-indigo-500 to-orange-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
-        >
-          Buy Me a Coffee
-        </a>
-      </section>
-
       {/* Footer */}
       <footer className="mt-16 pt-8 border-t border-slate-200 dark:border-slate-800/50 text-center text-sm text-slate-500 dark:text-slate-400">
         <p>
           Built with Claude Code · Content auto-updated via MCP
         </p>
         <p className="mt-1">
-          {curriculum.edition} ·{" "}
-          <a
-            href="https://buymeacoffee.com/curriculumbuilder"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
-          >
-            Support this project &#9749;
-          </a>
+          {curriculum.edition}
         </p>
       </footer>
     </div>

@@ -58,15 +58,17 @@ export default defineConfig({
     },
   ],
 
-  /* Start local dev server if no DEPLOYMENT_URL */
+  /* Start local server if no DEPLOYMENT_URL.
+     Use production build (npm start) to avoid Turbopack dev-mode crashes.
+     The build step is separate — run `npm run build` before `npx playwright test`. */
   ...(process.env.DEPLOYMENT_URL
     ? {}
     : {
         webServer: {
-          command: "npm run dev",
+          command: "npm start",
           url: "http://localhost:3000",
           reuseExistingServer: !process.env.CI,
-          timeout: 30_000,
+          timeout: 15_000,
         },
       }),
 });

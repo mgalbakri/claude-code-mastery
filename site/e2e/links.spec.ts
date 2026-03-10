@@ -2,10 +2,6 @@ import { test, expect } from "@playwright/test";
 
 const externalLinks = [
   {
-    name: "Buy Me a Coffee",
-    url: "https://buymeacoffee.com/curriculumbuilder",
-  },
-  {
     name: "Anthropic Claude",
     url: "https://www.anthropic.com/claude",
   },

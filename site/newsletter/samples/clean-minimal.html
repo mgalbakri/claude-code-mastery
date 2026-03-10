@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agent Code Academy — Weekly Update #12</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Source Serif 4', Georgia, serif;
+      background: #fafaf9;
+      color: #1c1917;
+      line-height: 1.7;
+    }
+
+    .page {
+      max-width: 612px;
+      margin: 0 auto;
+      background: #ffffff;
+      min-height: 792px;
+    }
+
+    /* Header */
+    .header {
+      padding: 44px 48px 36px;
+      border-bottom: 2px solid #1c1917;
+    }
+
+    .header-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 28px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .logo {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #57534e;
+    }
+
+    .date {
+      font-size: 11px;
+      color: #a8a29e;
+      letter-spacing: 0.04em;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.25;
+      color: #1c1917;
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .header .dek {
+      font-size: 16px;
+      color: #78716c;
+      font-style: italic;
+    }
+
+    .edition-line {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid #e7e5e4;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      color: #a8a29e;
+    }
+
+    .edition-line .pill {
+      background: #1c1917;
+      color: #fafaf9;
+      padding: 2px 10px;
+      border-radius: 100px;
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.04em;
+    }
+
+    /* Content */
+    .content {
+      padding: 32px 48px;
+    }
+
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 32px 0 20px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .section-divider:first-child {
+      margin-top: 0;
+    }
+
+    .section-divider span {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #a8a29e;
+      white-space: nowrap;
+    }
+
+    .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e7e5e4;
+    }
+
+    /* Update items */
+    .update-item {
+      margin-bottom: 26px;
+      padding-bottom: 26px;
+      border-bottom: 1px solid #f5f5f4;
+    }
+
+    .update-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .update-item .label {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .label-new { color: #16a34a; }
+    .label-updated { color: #2563eb; }
+    .label-deprecated { color: #d97706; }
+
+    .update-item h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1c1917;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .update-item p {
+      font-size: 14.5px;
+      color: #44403c;
+      margin-bottom: 8px;
+    }
+
+    .curriculum-ref {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: #a8a29e;
+      font-style: normal;
+    }
+
+    .curriculum-ref strong {
+      color: #78716c;
+    }
+
+    /* Code */
+    .code-block {
+      background: #1c1917;
+      color: #e7e5e4;
+      border-radius: 6px;
+      padding: 16px 18px;
+      margin: 14px 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .code-block .comment { color: #78716c; }
+    .code-block .string { color: #86efac; }
+
+    /* Tip */
+    .tip {
+      margin-top: 8px;
+      padding: 20px 24px;
+      border-left: 3px solid #1c1917;
+      background: #fafaf9;
+    }
+
+    .tip-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #1c1917;
+      margin-bottom: 8px;
+    }
+
+    .tip p {
+      font-size: 14px;
+      color: #44403c;
+    }
+
+    /* Summary box */
+    .summary-box {
+      background: #fafaf9;
+      border: 1px solid #e7e5e4;
+      border-radius: 6px;
+      padding: 18px 22px;
+      margin-bottom: 28px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .summary-box .summary-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #78716c;
+      margin-bottom: 10px;
+    }
+
+    .summary-list {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+    }
+
+    .summary-list li {
+      font-size: 13px;
+      color: #44403c;
+    }
+
+    .summary-list li strong {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1c1917;
+      display: block;
+      margin-bottom: 1px;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 24px 48px;
+      border-top: 2px solid #1c1917;
+      font-family: 'Inter', sans-serif;
+      text-align: center;
+    }
+
+    .footer p {
+      font-size: 11px;
+      color: #a8a29e;
+      margin-bottom: 3px;
+    }
+
+    .footer a {
+      color: #78716c;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-meta">
+        <div class="logo">Agent Code Academy</div>
+        <div class="date">February 24 – March 2, 2026</div>
+      </div>
+      <h1>Multi-File Edits, Faster Hooks, and a Smarter Default</h1>
+      <p class="dek">This week's changes to Claude Code and what they mean for your learning.</p>
+      <div class="edition-line">
+        <span class="pill">Issue #12</span>
+        <span>3 new features · 1 deprecation · 5 lessons updated</span>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+      <!-- At a Glance -->
+      <div class="summary-box">
+        <div class="summary-title">At a Glance</div>
+        <ul class="summary-list">
+          <li><strong>3</strong> New features</li>
+          <li><strong>1</strong> Deprecation</li>
+          <li><strong>5</strong> Lessons updated</li>
+          <li><strong>2</strong> New exercises</li>
+        </ul>
+      </div>
+
+      <!-- Updates -->
+      <div class="section-divider"><span>What Changed</span></div>
+
+      <div class="update-item">
+        <div class="label label-new">New Feature</div>
+        <h3>Multi-File Edit Mode</h3>
+        <p>Claude Code now proposes coordinated edits across multiple files in a single turn. When you refactor a function, all its callers get updated atomically — no more hunting through files one by one.</p>
+        <div class="curriculum-ref"><strong>Updated:</strong> Week 7 (Refactoring) · Week 9 (Large Projects)</div>
+      </div>
+
+      <div class="update-item">
+        <div class="label label-new">New Feature</div>
+        <h3>Hook Execution 3× Faster</h3>
+        <p>Pre- and post-command hooks now run in parallel where possible, cutting average overhead from ~900ms to ~300ms. Custom validation hooks feel nearly instant.</p>
+        <div class="curriculum-ref"><strong>Updated:</strong> Week 10 (Hooks &amp; Automation)</div>
+      </div>
+
+      <div class="update-item">
+        <div class="label label-updated">Updated</div>
+        <h3>Extended Thinking Defaults to On</h3>
+        <p>With Claude Opus 4.6, extended thinking is now enabled by default for complex prompts. The model decides when deep reasoning is needed — no manual toggling required.</p>
+        <div class="curriculum-ref"><strong>Updated:</strong> Week 6 (Prompt Engineering)</div>
+      </div>
+
+      <div class="update-item">
+        <div class="label label-deprecated">Deprecated</div>
+        <h3>Legacy /config Command Removed</h3>
+        <p>The /config slash command is gone, fully replaced by settings.json and CLAUDE.md. If your workflow still references it, now's the time to migrate.</p>
+        <div class="curriculum-ref"><strong>Updated:</strong> Week 4 (Configuration)</div>
+      </div>
+
+      <!-- Tip -->
+      <div class="section-divider"><span>Tip of the Week</span></div>
+
+      <div class="tip">
+        <div class="tip-label">Try This</div>
+        <p>Chain the new parallel hooks into a pre-commit quality gate — lint, type-check, and test all run simultaneously before every commit:</p>
+      </div>
+      <div class="code-block">
+        <span class="comment">// .claude/settings.json</span><br>
+        {<br>
+        &nbsp;&nbsp;<span class="string">"hooks"</span>: {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"pre-commit"</span>: [<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"npm run lint"</span>,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"npm run typecheck"</span>,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"npm run test:quick"</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;]<br>
+        &nbsp;&nbsp;}<br>
+        }
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <p>Agent Code Academy · Free 12-week course</p>
+      <p><a href="https://agentcodeacademy.com">agentcodeacademy.com</a></p>
+      <p style="margin-top: 6px; font-size: 10px; color: #d6d3d1;">Unsubscribe · View in browser</p>
+    </div>
+  </div>
+</body>
+</html>
