@@ -63,3 +63,38 @@ export function getNewsletterHtml(issueNumber: number): string | null {
   if (!fs.existsSync(filepath)) return null;
   return fs.readFileSync(filepath, "utf-8");
 }
+
+/**
+ * Extract embeddable content from a newsletter HTML document.
+ * Returns scoped CSS + body HTML that can be rendered inline
+ * instead of in an iframe — making content crawlable by Google.
+ *
+ * CSS selectors are scoped to `.newsletter-embed` to avoid leaking
+ * into the host page styles.
+ */
+export function getNewsletterContent(issueNumber: number): {
+  styles: string;
+  body: string;
+} | null {
+  const html = getNewsletterHtml(issueNumber);
+  if (!html) return null;
+
+  // Extract <style> blocks
+  const styleMatches = html.match(/<style[^>]*>([\s\S]*?)<\/style>/gi) || [];
+  let css = styleMatches
+    .map((s) => s.replace(/<\/?style[^>]*>/gi, ""))
+    .join("\n");
+
+  // Scope CSS selectors to .newsletter-embed
+  // Replace body/html selectors with the container class
+  css = css.replace(/\bbody\b/g, ".newsletter-embed");
+  css = css.replace(/\bhtml\b/g, ".newsletter-embed");
+  // Replace universal reset (* { ... }) with scoped version
+  css = css.replace(/^\s*\*\s*\{/gm, ".newsletter-embed, .newsletter-embed * {");
+
+  // Extract body content (between <body> and </body>)
+  const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+  const body = bodyMatch ? bodyMatch[1] : "";
+
+  return { styles: css, body };
+}

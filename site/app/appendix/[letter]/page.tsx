@@ -4,6 +4,7 @@ import { getAllAppendices, getAppendix } from "@/lib/parse-curriculum";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
 import { EmailBanner } from "@/components/email-banner";
 import { ShareButtons } from "@/components/share-buttons";
+import { BreadcrumbJsonLd } from "@/components/breadcrumb-jsonld";
 
 interface AppendixPageProps {
   params: Promise<{ letter: string }>;
@@ -64,6 +65,13 @@ export default async function AppendixPage({ params }: AppendixPageProps) {
 
   return (
     <article className="py-8 lg:py-12">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", href: "/" },
+          { name: "Appendices", href: "/" },
+          { name: `Appendix ${appendix.letter}: ${appendix.title}`, href: `/appendix/${appendix.letter.toLowerCase()}` },
+        ]}
+      />
       <EmailBanner />
 
       {/* Breadcrumb */}

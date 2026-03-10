@@ -8,6 +8,7 @@ import { WeekCompleteButton } from "@/components/week-complete-button";
 import { PremiumGate } from "@/components/premium-gate";
 import { ContextualToolCta } from "@/components/contextual-tool-cta";
 import { ShareButtons } from "@/components/share-buttons";
+import { BreadcrumbJsonLd } from "@/components/breadcrumb-jsonld";
 
 interface WeekPageProps {
   params: Promise<{ number: string }>;
@@ -70,6 +71,13 @@ export default async function WeekPage({ params }: WeekPageProps) {
 
   return (
     <article className="py-8 lg:py-12">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", href: "/" },
+          { name: `Phase ${week.phase}: ${week.phaseName}`, href: "/" },
+          { name: `Week ${week.number}: ${week.title}`, href: `/week/${week.number}` },
+        ]}
+      />
       <EmailBanner />
       <EmailGate weekNumber={weekNum} />
 
