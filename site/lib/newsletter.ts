@@ -69,8 +69,13 @@ export function getNewsletterHtml(issueNumber: number): string | null {
  * Returns scoped CSS + body HTML that can be rendered inline
  * instead of in an iframe — making content crawlable by Google.
  *
- * CSS selectors are scoped to `.newsletter-embed` to avoid leaking
- * into the host page styles.
+ * All CSS is wrapped inside a `.newsletter-embed { }` nesting block
+ * so every rule — element selectors, class selectors, etc. — is
+ * automatically scoped to the container. This avoids the fragile
+ * regex-based selector replacement that previously only handled
+ * body/html/* selectors and missed everything else.
+ *
+ * CSS nesting is supported in Chrome 120+, Firefox 117+, Safari 17.2+.
  */
 export function getNewsletterContent(issueNumber: number): {
   styles: string;
@@ -85,15 +90,21 @@ export function getNewsletterContent(issueNumber: number): {
     .map((s) => s.replace(/<\/?style[^>]*>/gi, ""))
     .join("\n");
 
-  // Scope CSS selectors to .newsletter-embed
-  // Replace body/html selectors with the container class
-  css = css.replace(/\bbody\b/g, ".newsletter-embed");
-  css = css.replace(/\bhtml\b/g, ".newsletter-embed");
-  // Replace universal reset (* { ... }) with scoped version
-  css = css.replace(/^\s*\*\s*\{/gm, ".newsletter-embed, .newsletter-embed * {");
+  // Strip body/html selectors since they don't apply inline —
+  // the nesting block already scopes everything to .newsletter-embed.
+  // Only replace at the start of a rule (selector position), not inside
+  // property values or comments, by matching selector-like patterns.
+  css = css.replace(/^(\s*)body\s*\{/gm, "$1& {");
+  css = css.replace(/^(\s*)html\s*\{/gm, "$1& {");
 
-  // Extract body content (between <body> and </body>)
-  const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+  // Wrap ALL rules inside a nesting block so every selector
+  // (element, class, id, pseudo, etc.) is scoped automatically.
+  css = `.newsletter-embed {\n${css}\n}`;
+
+  // Extract body content (between <body> and </body>) — use greedy
+  // match to capture everything including nested content that might
+  // contain </body> in scripts or comments.
+  const bodyMatch = html.match(/<body[^>]*>([\s\S]*)<\/body>/i);
   const body = bodyMatch ? bodyMatch[1] : "";
 
   return { styles: css, body };

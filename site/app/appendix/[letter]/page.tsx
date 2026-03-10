@@ -68,7 +68,6 @@ export default async function AppendixPage({ params }: AppendixPageProps) {
       <BreadcrumbJsonLd
         items={[
           { name: "Home", href: "/" },
-          { name: "Appendices", href: "/" },
           { name: `Appendix ${appendix.letter}: ${appendix.title}`, href: `/appendix/${appendix.letter.toLowerCase()}` },
         ]}
       />

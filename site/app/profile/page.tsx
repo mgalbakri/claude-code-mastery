@@ -23,6 +23,10 @@ export const metadata: Metadata = {
     title: "Your Profile — Agent Code Academy",
     images: ["/og?title=Your%20Profile"],
   },
+  robots: {
+    index: false,
+    follow: true,
+  },
   alternates: {
     canonical: "https://agentcodeacademy.com/profile",
   },

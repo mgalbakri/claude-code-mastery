@@ -74,7 +74,6 @@ export default async function WeekPage({ params }: WeekPageProps) {
       <BreadcrumbJsonLd
         items={[
           { name: "Home", href: "/" },
-          { name: `Phase ${week.phase}: ${week.phaseName}`, href: "/" },
           { name: `Week ${week.number}: ${week.title}`, href: `/week/${week.number}` },
         ]}
       />

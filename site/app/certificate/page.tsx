@@ -23,6 +23,10 @@ export const metadata: Metadata = {
     title: "Certificate of Completion — Agent Code Academy",
     images: ["/og?title=Certificate%20of%20Completion"],
   },
+  robots: {
+    index: false,
+    follow: true,
+  },
   alternates: {
     canonical: "https://agentcodeacademy.com/certificate",
   },
