@@ -19,6 +19,18 @@
         "hooks": [
           {
             "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/block-dangerous-commands.sh",
+            "timeout": 5,
+            "statusMessage": "Security: checking for dangerous commands..."
+          },
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/commit-quality.sh",
+            "timeout": 5,
+            "statusMessage": "Security: checking commit quality..."
+          },
+          {
+            "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/enforce-build-test.sh",
             "timeout": 10,
             "statusMessage": "Checking build freshness..."
@@ -28,6 +40,23 @@
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/check-bundle-size.sh",
             "timeout": 5,
             "statusMessage": "Checking bundle size..."
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/protect-files.sh",
+            "timeout": 5,
+            "statusMessage": "Security: checking protected files..."
+          },
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/anti-hallucination.sh",
+            "timeout": 5,
+            "statusMessage": "Verifying edit target exists..."
           }
         ]
       }
