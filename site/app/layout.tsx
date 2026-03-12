@@ -124,7 +124,7 @@ export default function RootLayout({
                   courseWorkload: "PT56H",
                   offers: {
                     "@type": "Offer",
-                    price: 0,
+                    price: "0",
                     priceCurrency: "USD",
                   },
                 },
@@ -135,7 +135,7 @@ export default function RootLayout({
                   courseWorkload: "PT168H",
                   offers: {
                     "@type": "Offer",
-                    price: 49,
+                    price: "49",
                     priceCurrency: "USD",
                   },
                 },

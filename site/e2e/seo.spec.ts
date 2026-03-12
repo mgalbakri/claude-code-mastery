@@ -46,7 +46,11 @@ test.describe("SEO: Homepage", () => {
     const data = JSON.parse(content!);
     expect(data["@type"]).toBe("Course");
     expect(data.name).toContain("Agent Code Academy");
-    expect(data.isAccessibleForFree).toBe(false);
+    expect(data.isAccessibleForFree).toBe(true);
+    expect(Array.isArray(data.hasCourseInstance)).toBe(true);
+    expect(data.hasCourseInstance).toHaveLength(2);
+    expect(data.hasCourseInstance[0].offers.price).toBe("0");
+    expect(data.hasCourseInstance[1].offers.price).toBe("49");
   });
 });
 
@@ -112,10 +116,15 @@ test.describe("SEO: Sitemap", () => {
       expect(content).toContain(`/week/${i}`);
     }
 
-    // All 9 appendices
-    for (const letter of ["a", "b", "c", "d", "e", "f", "g", "h", "i"]) {
+    // All 10 appendices
+    for (const letter of ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"]) {
       expect(content).toContain(`/appendix/${letter}`);
     }
+
+    // noindex pages must NOT appear in sitemap
+    expect(content).not.toContain("/profile");
+    expect(content).not.toContain("/certificate");
+    expect(content).not.toContain("/payment/success");
   });
 });
 

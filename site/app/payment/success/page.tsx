@@ -3,7 +3,7 @@ import PaymentSuccessClient from "./success-client";
 
 export const metadata: Metadata = {
   title: "Payment Confirmation",
-  robots: { index: false, follow: false },
+  robots: { index: false, follow: true },
 };
 
 export default function PaymentSuccessPage() {

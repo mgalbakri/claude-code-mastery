@@ -45,9 +45,9 @@ function PaymentSuccessContent() {
       }
 
       try {
-        const res = await fetch(
-          `/api/verify-session?order_id=${orderId}`
-        );
+        const verifyUrl = new URL("/api/verify-session", window.location.origin);
+        verifyUrl.searchParams.set("order_id", orderId);
+        const res = await fetch(verifyUrl.toString());
         if (!res.ok) {
           setStatus("error");
           return;
