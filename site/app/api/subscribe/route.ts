@@ -54,9 +54,9 @@ export async function POST(request: Request) {
     const { error: resendError } = await resend.contacts.create(contactData);
 
     if (resendError) {
-      console.error("Resend contact creation failed:", resendError);
+      console.error("Resend contact creation failed:", JSON.stringify(resendError));
       return NextResponse.json(
-        { error: "Subscription failed. Please try again." },
+        { error: "Subscription failed. Please try again.", detail: resendError.message },
         { status: 500 }
       );
     }
