@@ -70,28 +70,41 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     if (!user) return;
 
     const alreadyComplete = completedWeeks.includes(weekNumber);
+    const previousWeeks = [...completedWeeks];
 
+    // Optimistic update
     if (alreadyComplete) {
-      // Remove completion
-      const { error } = await supabase
-        .from("progress")
-        .delete()
-        .eq("user_id", user.id)
-        .eq("week_number", weekNumber);
-
-      if (!error) {
-        setCompletedWeeks((prev) => prev.filter((w) => w !== weekNumber));
-      }
+      setCompletedWeeks((prev) => prev.filter((w) => w !== weekNumber));
     } else {
-      // Mark complete
-      const { error } = await supabase.from("progress").insert({
-        user_id: user.id,
-        week_number: weekNumber,
-      });
+      setCompletedWeeks((prev) => [...prev, weekNumber].sort((a, b) => a - b));
+    }
 
-      if (!error) {
-        setCompletedWeeks((prev) => [...prev, weekNumber].sort((a, b) => a - b));
+    try {
+      if (alreadyComplete) {
+        const { error } = await supabase
+          .from("progress")
+          .delete()
+          .eq("user_id", user.id)
+          .eq("week_number", weekNumber);
+
+        if (error) {
+          console.error("Failed to update progress:", error);
+          setCompletedWeeks(previousWeeks);
+        }
+      } else {
+        const { error } = await supabase.from("progress").insert({
+          user_id: user.id,
+          week_number: weekNumber,
+        });
+
+        if (error) {
+          console.error("Failed to update progress:", error);
+          setCompletedWeeks(previousWeeks);
+        }
       }
+    } catch {
+      console.error("Failed to update progress");
+      setCompletedWeeks(previousWeeks);
     }
   }
 

@@ -9,15 +9,17 @@ import { ReferralPrompt } from "@/components/referral-prompt";
 export function EmailSignup() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
   const emailRef = useRef("");
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSubmitting(true);
 
-    const email = new FormData(e.currentTarget).get("email") as string;
+    const email = (new FormData(e.currentTarget).get("email") as string).trim();
     emailRef.current = email;
     const referrer = getStoredReferrer();
+    setError("");
 
     try {
       const res = await fetch(SUBSCRIBE_API, {
@@ -27,9 +29,11 @@ export function EmailSignup() {
       });
       if (res.ok) {
         setSubmitted(true);
+      } else {
+        setError("Something went wrong. Please try again.");
       }
     } catch {
-      // Falls back gracefully
+      setError("Network error. Please check your connection and try again.");
     } finally {
       setSubmitting(false);
     }
@@ -85,6 +89,9 @@ export function EmailSignup() {
           {submitting ? "Subscribing..." : "Subscribe"}
         </button>
       </form>
+      {error && (
+        <p className="text-xs text-red-600 dark:text-red-400 mt-2">{error}</p>
+      )}
       <p className="text-xs text-slate-500 dark:text-slate-600 mt-3">
         Free forever. Unsubscribe anytime.
       </p>
