@@ -45,7 +45,7 @@ export function AuthButton() {
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setShowDropdown(!showDropdown)}
-          className="flex items-center gap-2 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
+          className="flex items-center gap-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
           aria-label="User menu"
         >
           {avatarUrl ? (
@@ -56,14 +56,14 @@ export function AuthButton() {
               className="w-8 h-8 rounded-full border-2 border-slate-200 dark:border-slate-700"
             />
           ) : (
-            <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-bold">
+            <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-bold">
               {displayName.charAt(0).toUpperCase()}
             </div>
           )}
         </button>
 
         {showDropdown && (
-          <div className="absolute right-0 mt-2 w-56 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/50 shadow-xl z-50 py-1">
+          <div className="absolute right-0 mt-2 w-56 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/50 shadow-xl z-50 py-1">
             <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">
               <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
                 {displayName}
@@ -105,7 +105,7 @@ export function AuthButton() {
       </button>
 
       {showSignIn && (
-        <div className="absolute right-0 mt-2 w-64 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/50 shadow-xl z-50 p-4">
+        <div className="absolute right-0 mt-2 w-64 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/50 shadow-xl z-50 p-4">
           <p className="text-sm font-semibold text-slate-900 dark:text-white mb-3">
             Sign in to track progress
           </p>
@@ -150,7 +150,7 @@ export function AuthButton() {
               Continue with Google
             </button>
           </div>
-          <p className="text-xs text-slate-400 dark:text-slate-500 mt-3 text-center">
+          <p className="text-xs text-slate-500 dark:text-slate-500 mt-3 text-center">
             Track your progress across all 12 weeks
           </p>
         </div>

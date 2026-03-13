@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 import { useProgress } from "@/lib/progress-context";
+import { User, Award } from "lucide-react";
 import { TOTAL_WEEKS } from "@/lib/constants";
 
 const phaseColors: Record<number, string> = {
@@ -33,7 +34,7 @@ export function ProfileClient() {
   if (!user) {
     return (
       <div className="py-16 text-center max-w-md mx-auto">
-        <div className="text-4xl mb-4">&#128100;</div>
+        <User className="w-10 h-10 mx-auto mb-4 text-slate-400 dark:text-slate-500" />
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
           Your Profile
         </h1>
@@ -44,7 +45,7 @@ export function ProfileClient() {
         <div className="space-y-3">
           <button
             onClick={signInWithGithub}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-orange-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-blue-600 dark:bg-blue-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
           >
             <svg className="w-5 h-5" viewBox="0 0 16 16" fill="currentColor">
               <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
@@ -53,7 +54,7 @@ export function ProfileClient() {
           </button>
           <button
             onClick={signInWithGoogle}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
@@ -89,7 +90,7 @@ export function ProfileClient() {
             className="w-16 h-16 rounded-full border-2 border-slate-200 dark:border-slate-700"
           />
         ) : (
-          <div className="w-16 h-16 rounded-full bg-indigo-600 text-white flex items-center justify-center text-2xl font-bold">
+          <div className="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl font-bold">
             {displayName.charAt(0).toUpperCase()}
           </div>
         )}
@@ -107,10 +108,10 @@ export function ProfileClient() {
       {allComplete && (
         <Link
           href="/certificate"
-          className="block mb-8 p-6 rounded-2xl bg-gradient-to-r from-indigo-50 to-amber-50 dark:from-indigo-950/20 dark:to-amber-950/20 border border-indigo-200 dark:border-indigo-800 hover:shadow-lg transition-shadow"
+          className="block mb-8 p-6 rounded-2xl bg-gradient-to-r from-blue-50 to-amber-50 dark:from-blue-950/20 dark:to-amber-950/20 border border-blue-200 dark:border-blue-800 hover:shadow-lg transition-shadow"
         >
           <div className="flex items-center gap-4">
-            <span className="text-4xl">&#127942;</span>
+            <Award className="w-10 h-10 text-amber-500" />
             <div>
               <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                 Certificate Earned!
@@ -119,7 +120,7 @@ export function ProfileClient() {
                 You&apos;ve completed all 12 weeks. Click to view and download your certificate.
               </p>
             </div>
-            <span className="ml-auto text-indigo-600 dark:text-indigo-400 text-xl">
+            <span className="ml-auto text-blue-600 dark:text-blue-400 text-xl">
               &rarr;
             </span>
           </div>
@@ -142,7 +143,7 @@ export function ProfileClient() {
             style={{ width: `${progressLoading ? 0 : completionPercentage}%` }}
           />
         </div>
-        <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
+        <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
           {completionPercentage}% complete
         </p>
       </section>
@@ -160,10 +161,10 @@ export function ProfileClient() {
               <Link
                 key={week}
                 href={`/week/${week}`}
-                className={`relative p-4 rounded-xl border text-center transition-all hover:shadow-md ${
+                className={`relative p-4 rounded-lg border text-center transition-all hover:shadow-md ${
                   completed
                     ? "bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800"
-                    : "bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-800/50 hover:border-indigo-300 dark:hover:border-indigo-500/40"
+                    : "bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-800/50 hover:border-blue-300 dark:hover:border-blue-500/40"
                 }`}
               >
                 <span

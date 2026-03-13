@@ -14,7 +14,10 @@ function verifySignature(body: string, signature: string | null): boolean {
   const secret = process.env.LEMON_SQUEEZY_WEBHOOK_SECRET;
   if (!secret || !signature) return false;
   const hmac = crypto.createHmac("sha256", secret).update(body).digest("hex");
-  return crypto.timingSafeEqual(Buffer.from(hmac), Buffer.from(signature));
+  const hmacBuf = Buffer.from(hmac);
+  const sigBuf = Buffer.from(signature);
+  if (hmacBuf.length !== sigBuf.length) return false;
+  return crypto.timingSafeEqual(hmacBuf, sigBuf);
 }
 
 export async function POST(request: Request) {

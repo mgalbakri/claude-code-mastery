@@ -80,7 +80,7 @@ function BuyButton() {
     <button
       onClick={handleCheckout}
       disabled={loading}
-      className="block w-full text-center px-4 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-orange-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity shadow-lg shadow-indigo-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+      className="block w-full text-center px-4 py-3 rounded-lg bg-blue-600 dark:bg-blue-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
     >
       {loading ? "Opening checkout..." : `Get Pro Access — ${PRICE_DISPLAY}`}
     </button>
@@ -99,7 +99,7 @@ export function PricingClient() {
         </p>
         <Link
           href="/week/1"
-          className="inline-flex px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-orange-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
+          className="inline-flex px-6 py-3 rounded-lg bg-blue-600 dark:bg-blue-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
         >
           Start Learning &rarr;
         </Link>
@@ -144,7 +144,7 @@ export function PricingClient() {
 
           <Link
             href="/week/1"
-            className="block w-full text-center px-4 py-3 rounded-xl border-2 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors mb-6"
+            className="block w-full text-center px-4 py-3 rounded-lg border-2 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors mb-6"
           >
             Start Free
           </Link>
@@ -161,7 +161,7 @@ export function PricingClient() {
             ))}
           </ul>
 
-          <p className="mt-6 text-xs text-slate-400 dark:text-slate-500">
+          <p className="mt-6 text-xs text-slate-500 dark:text-slate-500">
             Includes weeks {FREE_WEEKS.join(", ")} of {FREE_WEEKS.length + PREMIUM_WEEKS.length}
           </p>
         </div>
@@ -179,7 +179,7 @@ export function PricingClient() {
                     The complete course
                   </p>
                 </div>
-                <span className="ml-auto inline-flex items-center px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-400 text-[10px] font-bold uppercase tracking-wider">
+                <span className="ml-auto inline-flex items-center px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400 text-[10px] font-bold uppercase tracking-wider">
                   Most Popular
                 </span>
               </div>
@@ -207,7 +207,7 @@ export function PricingClient() {
                 ))}
               </ul>
 
-              <p className="mt-6 text-xs text-slate-400 dark:text-slate-500">
+              <p className="mt-6 text-xs text-slate-500 dark:text-slate-500">
                 30-day money-back guarantee
               </p>
             </div>
@@ -245,7 +245,7 @@ export function PricingClient() {
           ].map(({ q, a }) => (
             <div
               key={q}
-              className="p-4 rounded-xl bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800/50"
+              className="p-4 rounded-lg bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800/50"
             >
               <h3 className="font-semibold text-slate-900 dark:text-white text-sm mb-1">
                 {q}
@@ -257,7 +257,7 @@ export function PricingClient() {
       </section>
 
       {/* Trust signals */}
-      <div className="text-center p-6 rounded-2xl bg-indigo-50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-800">
+      <div className="text-center p-6 rounded-2xl bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800">
         <h3 className="font-bold text-slate-900 dark:text-white mb-2">
           Try before you buy
         </h3>

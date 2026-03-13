@@ -59,10 +59,10 @@ export function EmailBanner() {
   if (!visible) return null;
 
   return (
-    <div className="mb-8 p-4 sm:p-5 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800/50 relative">
+    <div className="mb-8 p-4 sm:p-5 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800/50 relative">
       <button
         onClick={dismiss}
-        className="absolute top-3 right-3 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+        className="absolute top-3 right-3 text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
         aria-label="Dismiss"
       >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
@@ -103,12 +103,12 @@ export function EmailBanner() {
               name="email"
               required
               placeholder="you@example.com"
-              className="w-full sm:w-52 px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent text-sm"
+              className="w-full sm:w-52 px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent text-sm"
             />
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-orange-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+              className="px-4 py-2 rounded-lg bg-blue-600 dark:bg-blue-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
             >
               {submitting ? "..." : "Subscribe"}
             </button>

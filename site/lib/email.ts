@@ -65,7 +65,7 @@ function buildPurchaseEmailHtml({
 
           <!-- Header -->
           <tr>
-            <td style="background:linear-gradient(135deg,#6366f1,#f97316); padding:32px 40px; text-align:center;">
+            <td style="background:#2563eb; padding:32px 40px; text-align:center;">
               <h1 style="margin:0; color:#ffffff; font-size:24px; font-weight:700;">
                 Agent Code Academy
               </h1>
@@ -106,7 +106,7 @@ function buildPurchaseEmailHtml({
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center" style="padding:8px 0 32px;">
-                    <a href="https://agentcodeacademy.com/week/5" style="display:inline-block; padding:14px 32px; background:linear-gradient(135deg,#6366f1,#f97316); color:#ffffff; text-decoration:none; border-radius:8px; font-size:15px; font-weight:600;">
+                    <a href="https://agentcodeacademy.com/week/5" style="display:inline-block; padding:14px 32px; background:#2563eb; color:#ffffff; text-decoration:none; border-radius:8px; font-size:15px; font-weight:600;">
                       Start Week 5 →
                     </a>
                   </td>

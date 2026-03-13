@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePremiumStatus } from "@/lib/hooks/use-premium-status";
 import { FREE_WEEKS, PRICE_DISPLAY } from "@/lib/constants";
+import { Lock } from "lucide-react";
 import type { ReactNode } from "react";
 
 interface PremiumGateProps {
@@ -42,7 +43,7 @@ export function PremiumGate({ weekNumber, children }: PremiumGateProps) {
       <div className="relative -mt-8 z-10">
         <div className="gradient-border-animated">
           <div className="relative z-10 p-8 rounded-2xl bg-white dark:bg-slate-900 shadow-xl text-center">
-            <div className="text-3xl mb-3">&#128274;</div>
+            <Lock className="w-8 h-8 mx-auto mb-3 text-slate-400 dark:text-slate-500" />
             <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
               Premium Content
             </h3>
@@ -50,7 +51,7 @@ export function PremiumGate({ weekNumber, children }: PremiumGateProps) {
               Week {weekNumber} is part of the Pro course. Unlock all remaining
               weeks with a single payment.
             </p>
-            <p className="text-xs text-slate-400 dark:text-slate-500 mb-6">
+            <p className="text-xs text-slate-500 dark:text-slate-500 mb-6">
               Lifetime access &middot; All future updates included &middot;
               30-day money-back guarantee
             </p>
@@ -58,7 +59,7 @@ export function PremiumGate({ weekNumber, children }: PremiumGateProps) {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link
                 href="/pricing"
-                className="inline-flex px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-orange-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity shadow-lg shadow-indigo-500/20"
+                className="inline-flex px-6 py-3 rounded-lg bg-blue-600 dark:bg-blue-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
               >
                 Get Pro Access — {PRICE_DISPLAY}
               </Link>

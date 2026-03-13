@@ -43,7 +43,7 @@ export function ReferralPrompt({ email, variant = "full" }: ReferralPromptProps)
           </code>
           <button
             onClick={copyLink}
-            className="text-xs px-2.5 py-1 rounded-md bg-indigo-500 text-white hover:bg-indigo-600 transition-colors"
+            className="text-xs px-2.5 py-1 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors"
           >
             {copied ? "Copied!" : "Copy"}
           </button>
@@ -53,7 +53,7 @@ export function ReferralPrompt({ email, variant = "full" }: ReferralPromptProps)
   }
 
   return (
-    <div className="mt-4 p-4 rounded-xl bg-indigo-50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-800">
+    <div className="mt-4 p-4 rounded-lg bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800">
       <p className="text-sm font-semibold text-slate-900 dark:text-white mb-1">
         Know someone who&apos;d love this?
       </p>
@@ -69,7 +69,7 @@ export function ReferralPrompt({ email, variant = "full" }: ReferralPromptProps)
         />
         <button
           onClick={copyLink}
-          className="px-4 py-2 rounded-lg bg-indigo-500 text-white text-sm font-medium hover:bg-indigo-600 transition-colors flex-shrink-0"
+          className="px-4 py-2 rounded-lg bg-blue-500 text-white text-sm font-medium hover:bg-blue-600 transition-colors flex-shrink-0"
         >
           {copied ? "Copied!" : "Copy Link"}
         </button>

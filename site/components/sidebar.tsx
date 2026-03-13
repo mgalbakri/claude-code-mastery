@@ -10,6 +10,7 @@ import { PremiumBadge } from "@/components/premium-badge";
 import { UpgradeCta } from "@/components/upgrade-cta";
 import { ToolRecommendationWidget } from "@/components/tool-recommendation-widget";
 import { TOTAL_WEEKS } from "@/lib/constants";
+import { Award, Info, Mail } from "lucide-react";
 
 interface SidebarProps {
   phases: Phase[];
@@ -26,6 +27,12 @@ const phaseBgColors: Record<number, string> = {
   1: "bg-emerald-50 dark:bg-emerald-500/10",
   2: "bg-blue-50 dark:bg-blue-500/10",
   3: "bg-purple-50 dark:bg-purple-500/10",
+};
+
+const phaseActiveBorder: Record<number, string> = {
+  1: "border-l-emerald-500",
+  2: "border-l-blue-500",
+  3: "border-l-purple-500",
 };
 
 export function Sidebar({ phases, appendices }: SidebarProps) {
@@ -78,12 +85,12 @@ export function Sidebar({ phases, appendices }: SidebarProps) {
                     href={href}
                     className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm transition-colors ${
                       isActive
-                        ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-medium border-l-2 border-indigo-500"
+                        ? `bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-medium border-l-2 ${phaseActiveBorder[phase.number] || "border-l-blue-500"}`
                         : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:text-slate-900 dark:hover:text-slate-200"
                     }`}
                   >
                     <ProgressIndicator completed={isComplete} />
-                    <span className="text-slate-400 dark:text-slate-600 mr-0.5 text-xs">
+                    <span className="text-slate-500 dark:text-slate-600 mr-0.5 text-xs">
                       {week.number}.
                     </span>
                     <span className="flex-1 truncate">{week.title}</span>
@@ -111,11 +118,11 @@ export function Sidebar({ phases, appendices }: SidebarProps) {
                     href={href}
                     className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
                       isActive
-                        ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-medium border-l-2 border-indigo-500"
+                        ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-medium border-l-2 border-blue-500"
                         : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:text-slate-900 dark:hover:text-slate-200"
                     }`}
                   >
-                    <span className="text-slate-400 dark:text-slate-600 mr-1.5 text-xs">
+                    <span className="text-slate-500 dark:text-slate-600 mr-1.5 text-xs">
                       {appendix.letter}.
                     </span>
                     {appendix.title}
@@ -133,22 +140,11 @@ export function Sidebar({ phases, appendices }: SidebarProps) {
           href="/about"
           className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
             pathname === "/about"
-              ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-medium border-l-2 border-indigo-500"
+              ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-medium border-l-2 border-blue-500"
               : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:text-slate-900 dark:hover:text-slate-200"
           }`}
         >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            className="flex-shrink-0"
-          >
-            <circle cx="8" cy="8" r="6.5" />
-            <path d="M8 7v4M8 5.5v0" strokeLinecap="round" />
-          </svg>
+          <Info className="w-4 h-4 flex-shrink-0" />
           About
         </Link>
       </div>
@@ -159,22 +155,11 @@ export function Sidebar({ phases, appendices }: SidebarProps) {
           href="/newsletter"
           className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
             pathname === "/newsletter" || pathname.startsWith("/newsletter/")
-              ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-medium border-l-2 border-indigo-500"
+              ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-medium border-l-2 border-blue-500"
               : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:text-slate-900 dark:hover:text-slate-200"
           }`}
         >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            className="flex-shrink-0"
-          >
-            <rect x="1" y="3" width="14" height="10" rx="1.5" />
-            <path d="M1 5l7 4 7-4" />
-          </svg>
+          <Mail className="w-4 h-4 flex-shrink-0" />
           Newsletter
         </Link>
       </div>
@@ -184,9 +169,9 @@ export function Sidebar({ phases, appendices }: SidebarProps) {
         <div className="mb-5">
           <Link
             href="/certificate"
-            className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-800 text-sm font-medium text-amber-700 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-500/20 transition-colors"
+            className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-800 text-sm font-medium text-amber-700 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-500/20 transition-colors"
           >
-            <span>&#127942;</span>
+            <Award className="w-4 h-4" />
             View Certificate
           </Link>
         </div>

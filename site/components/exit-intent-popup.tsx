@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef, type FormEvent } from "react";
 import { SUBSCRIBE_API, LS_EXIT_INTENT_SHOWN, LS_EMAIL_SUBSCRIBED, CHEAT_SHEET_PATH } from "@/lib/constants";
 import { getStoredReferrer } from "@/lib/referral";
+import { Check, X } from "lucide-react";
 import { ReferralPrompt } from "@/components/referral-prompt";
 
 export function ExitIntentPopup() {
@@ -75,21 +76,19 @@ export function ExitIntentPopup() {
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-800/50 p-8 text-center">
+      <div className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-lg shadow-2xl border border-slate-200 dark:border-slate-800/50 p-8 text-center">
         {/* Close button */}
         <button
           onClick={dismiss}
-          className="absolute top-4 right-4 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+          className="absolute top-4 right-4 text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
           aria-label="Close"
         >
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M5 5l10 10M15 5l-10 10" />
-          </svg>
+          <X className="w-5 h-5" />
         </button>
 
         {submitted ? (
           <>
-            <div className="text-3xl mb-3">&#10003;</div>
+            <Check className="w-8 h-8 mx-auto mb-3 text-emerald-500" />
             <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
               You&apos;re subscribed!
             </h3>
@@ -99,7 +98,7 @@ export function ExitIntentPopup() {
             <a
               href={CHEAT_SHEET_PATH}
               download
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-indigo-500 to-orange-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 dark:bg-blue-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
             >
               &#8595; Download Cheat Sheet (PDF)
             </a>
@@ -123,18 +122,18 @@ export function ExitIntentPopup() {
                 name="email"
                 required
                 placeholder="you@example.com"
-                className="w-full sm:flex-1 px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent text-sm"
+                className="w-full sm:flex-1 px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent text-sm"
               />
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full sm:w-auto px-6 py-3 rounded-lg bg-gradient-to-r from-indigo-500 to-orange-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full sm:w-auto px-6 py-3 rounded-lg bg-blue-600 dark:bg-blue-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {submitting ? "..." : "Get the Cheat Sheet"}
               </button>
             </form>
 
-            <p className="text-xs text-slate-400 dark:text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-500">
               No spam. Unsubscribe anytime.
             </p>
           </>

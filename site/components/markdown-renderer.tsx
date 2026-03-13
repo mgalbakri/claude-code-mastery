@@ -41,7 +41,7 @@ const components: Components = {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-indigo-600 dark:text-indigo-400 hover:underline"
+      className="text-blue-600 dark:text-blue-400 hover:underline"
     >
       {children}
     </a>
@@ -85,7 +85,7 @@ const components: Components = {
     </td>
   ),
   blockquote: ({ children }) => (
-    <blockquote className="mb-4 pl-4 border-l-4 border-indigo-400 dark:border-indigo-600 bg-indigo-50 dark:bg-indigo-950/30 py-2 px-3 rounded-r-lg text-slate-700 dark:text-slate-300">
+    <blockquote className="mb-4 pl-4 border-l-4 border-blue-400 dark:border-blue-600 bg-blue-50 dark:bg-blue-950/30 py-2 px-3 rounded-r-lg text-slate-700 dark:text-slate-300">
       {children}
     </blockquote>
   ),

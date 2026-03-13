@@ -16,13 +16,13 @@ export default function NotFound() {
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
         <Link
           href="/"
-          className="inline-flex items-center px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-orange-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
+          className="inline-flex items-center px-6 py-3 rounded-lg bg-blue-600 dark:bg-blue-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
         >
           Back to Home
         </Link>
         <Link
           href="/week/1"
-          className="inline-flex items-center px-6 py-3 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-medium text-sm hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
+          className="inline-flex items-center px-6 py-3 rounded-lg border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-medium text-sm hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
         >
           Start Week 1
         </Link>

@@ -137,7 +137,7 @@ export default function AboutPage() {
       <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
         <Link
           href="/week/1"
-          className="inline-flex items-center px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-orange-500 text-white font-semibold text-base hover:opacity-90 transition-opacity shadow-lg shadow-indigo-500/20"
+          className="inline-flex items-center px-6 py-3 rounded-lg bg-blue-600 dark:bg-blue-500 text-white font-semibold text-base hover:opacity-90 transition-opacity"
         >
           Start Learning →
         </Link>

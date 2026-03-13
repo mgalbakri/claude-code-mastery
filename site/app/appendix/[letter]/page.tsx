@@ -10,6 +10,8 @@ interface AppendixPageProps {
   params: Promise<{ letter: string }>;
 }
 
+export const revalidate = 3600;
+
 export function generateStaticParams() {
   const appendices = getAllAppendices();
   return appendices.map((a) => ({ letter: a.letter.toLowerCase() }));
@@ -116,7 +118,7 @@ export default async function AppendixPage({ params }: AppendixPageProps) {
           >
             <span>←</span>
             <div>
-              <div className="text-xs text-slate-400 dark:text-slate-500">
+              <div className="text-xs text-slate-500 dark:text-slate-500">
                 Previous
               </div>
               <div className="font-medium">
@@ -131,7 +133,7 @@ export default async function AppendixPage({ params }: AppendixPageProps) {
           >
             <span>←</span>
             <div>
-              <div className="text-xs text-slate-400 dark:text-slate-500">
+              <div className="text-xs text-slate-500 dark:text-slate-500">
                 Back to Course
               </div>
               <div className="font-medium">Week 12</div>
@@ -145,7 +147,7 @@ export default async function AppendixPage({ params }: AppendixPageProps) {
             className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors text-right"
           >
             <div>
-              <div className="text-xs text-slate-400 dark:text-slate-500">
+              <div className="text-xs text-slate-500 dark:text-slate-500">
                 Next
               </div>
               <div className="font-medium">
@@ -160,7 +162,7 @@ export default async function AppendixPage({ params }: AppendixPageProps) {
             className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors text-right"
           >
             <div>
-              <div className="text-xs text-slate-400 dark:text-slate-500">
+              <div className="text-xs text-slate-500 dark:text-slate-500">
                 Done
               </div>
               <div className="font-medium">Back to Overview</div>

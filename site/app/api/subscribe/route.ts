@@ -51,7 +51,15 @@ export async function POST(request: Request) {
       contactData.firstName = `ref:${referrer}`;
     }
 
-    await resend.contacts.create(contactData);
+    const { error: resendError } = await resend.contacts.create(contactData);
+
+    if (resendError) {
+      console.error("Resend contact creation failed:", resendError);
+      return NextResponse.json(
+        { error: "Subscription failed. Please try again." },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({ ok: true });
   } catch (error) {

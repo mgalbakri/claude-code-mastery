@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 import { useProgress } from "@/lib/progress-context";
+import { Lock, FileText } from "lucide-react";
 import { Certificate } from "@/components/certificate";
 import { TOTAL_WEEKS } from "@/lib/constants";
 
@@ -42,7 +43,7 @@ export function CertificateClient() {
   if (!user) {
     return (
       <div className="py-16 text-center max-w-md mx-auto">
-        <div className="text-4xl mb-4">&#128274;</div>
+        <Lock className="w-10 h-10 mx-auto mb-4 text-slate-400 dark:text-slate-500" />
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
           Certificate of Completion
         </h1>
@@ -51,7 +52,7 @@ export function CertificateClient() {
         </p>
         <Link
           href="/profile"
-          className="inline-flex px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-orange-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
+          className="inline-flex px-6 py-3 rounded-lg bg-blue-600 dark:bg-blue-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
         >
           Sign In
         </Link>
@@ -64,7 +65,7 @@ export function CertificateClient() {
     const remaining = TOTAL_WEEKS - completedWeeks.length;
     return (
       <div className="py-16 text-center max-w-md mx-auto">
-        <div className="text-4xl mb-4">&#128221;</div>
+        <FileText className="w-10 h-10 mx-auto mb-4 text-slate-400 dark:text-slate-500" />
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
           Almost There!
         </h1>
@@ -77,12 +78,12 @@ export function CertificateClient() {
             style={{ width: `${(completedWeeks.length / TOTAL_WEEKS) * 100}%` }}
           />
         </div>
-        <p className="text-xs text-slate-400 dark:text-slate-500 mb-6">
+        <p className="text-xs text-slate-500 dark:text-slate-500 mb-6">
           {completedWeeks.length}/{TOTAL_WEEKS} weeks completed
         </p>
         <Link
           href="/"
-          className="inline-flex px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-orange-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
+          className="inline-flex px-6 py-3 rounded-lg bg-blue-600 dark:bg-blue-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
         >
           Continue Learning
         </Link>
@@ -115,7 +116,7 @@ export function CertificateClient() {
         </Link>
         <button
           onClick={handlePrint}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-orange-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity print:hidden"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 dark:bg-blue-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity print:hidden"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
@@ -134,7 +135,7 @@ export function CertificateClient() {
       </div>
 
       {/* Instructions */}
-      <p className="text-center text-xs text-slate-400 dark:text-slate-500 mt-6 print:hidden">
+      <p className="text-center text-xs text-slate-500 dark:text-slate-500 mt-6 print:hidden">
         Tip: Use your browser&apos;s Print function (Ctrl/Cmd + P) and select &quot;Save as PDF&quot; to download.
       </p>
     </div>

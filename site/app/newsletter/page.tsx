@@ -76,14 +76,14 @@ export default function NewsletterArchivePage() {
             <Link
               key={issue.number}
               href={`/newsletter/${issue.number}`}
-              className="flex items-center justify-between p-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors group"
+              className="flex items-center justify-between p-4 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors group"
             >
               <div className="flex items-center gap-4">
-                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-bold text-sm">
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold text-sm">
                   #{issue.number}
                 </div>
                 <div>
-                  <div className="font-medium text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                  <div className="font-medium text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                     Weekly Dispatch #{issue.number}
                   </div>
                   <div className="text-sm text-slate-500 dark:text-slate-400">
@@ -91,7 +91,7 @@ export default function NewsletterArchivePage() {
                   </div>
                 </div>
               </div>
-              <span className="text-slate-400 dark:text-slate-600 group-hover:text-indigo-500 transition-colors">
+              <span className="text-slate-500 dark:text-slate-600 group-hover:text-blue-500 transition-colors">
                 →
               </span>
             </Link>

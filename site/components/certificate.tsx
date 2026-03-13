@@ -13,18 +13,18 @@ export function Certificate({ name, date, certificateId }: CertificateProps) {
       className="w-full max-w-3xl mx-auto aspect-[1.414/1] bg-white text-slate-900 rounded-lg shadow-2xl overflow-hidden print:shadow-none print:rounded-none"
     >
       {/* Outer border */}
-      <div className="w-full h-full border-[6px] border-indigo-600 p-2">
+      <div className="w-full h-full border-[6px] border-blue-600 p-2">
         {/* Inner border */}
-        <div className="w-full h-full border-2 border-indigo-300 flex flex-col items-center justify-center text-center px-8 py-12 sm:px-16 sm:py-16 relative">
+        <div className="w-full h-full border-2 border-blue-300 flex flex-col items-center justify-center text-center px-8 py-12 sm:px-16 sm:py-16 relative">
           {/* Corner accents */}
-          <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-indigo-400" />
-          <div className="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-indigo-400" />
-          <div className="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-indigo-400" />
-          <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-indigo-400" />
+          <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-blue-400" />
+          <div className="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-blue-400" />
+          <div className="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-blue-400" />
+          <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-blue-400" />
 
           {/* Header */}
           <div className="mb-2">
-            <div className="text-xs sm:text-sm font-semibold uppercase tracking-[0.3em] text-indigo-600 mb-1">
+            <div className="text-xs sm:text-sm font-semibold uppercase tracking-[0.3em] text-blue-600 mb-1">
               Agent Code Academy
             </div>
           </div>
@@ -34,7 +34,7 @@ export function Certificate({ name, date, certificateId }: CertificateProps) {
             Certificate of Completion
           </h1>
 
-          <div className="w-24 h-0.5 bg-indigo-500 my-4 sm:my-6" />
+          <div className="w-24 h-0.5 bg-blue-500 my-4 sm:my-6" />
 
           {/* Subtitle */}
           <p className="text-sm sm:text-base text-slate-500 mb-4 sm:mb-6">
@@ -43,7 +43,7 @@ export function Certificate({ name, date, certificateId }: CertificateProps) {
 
           {/* Name */}
           <div className="mb-4 sm:mb-6">
-            <h2 className="text-2xl sm:text-4xl font-bold text-indigo-700 mb-1">
+            <h2 className="text-2xl sm:text-4xl font-bold text-blue-700 mb-1">
               {name}
             </h2>
             <div className="w-64 h-px bg-slate-300 mx-auto" />

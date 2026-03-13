@@ -3,13 +3,14 @@
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { PartyPopper, Loader2, AlertTriangle } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { LS_PREMIUM_TOKEN, COURSE_IS_FREE } from "@/lib/constants";
 
 function FreeCourseContent() {
   return (
     <div className="py-16 text-center max-w-md mx-auto">
-      <div className="text-4xl mb-4">&#127881;</div>
+      <PartyPopper className="w-10 h-10 mx-auto mb-4 text-amber-500" />
       <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
         The Course Is Free!
       </h1>
@@ -18,7 +19,7 @@ function FreeCourseContent() {
       </p>
       <Link
         href="/week/1"
-        className="inline-flex px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-orange-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
+        className="inline-flex px-6 py-3 rounded-lg bg-blue-600 dark:bg-blue-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
       >
         Start Week 1 &rarr;
       </Link>
@@ -76,7 +77,7 @@ function PaymentSuccessContent() {
   if (status === "verifying") {
     return (
       <div className="py-16 text-center">
-        <div className="text-3xl mb-4 animate-pulse">&#9889;</div>
+        <Loader2 className="w-8 h-8 mx-auto mb-4 text-blue-500 animate-spin" />
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
           Verifying your payment...
         </h1>
@@ -90,7 +91,7 @@ function PaymentSuccessContent() {
   if (status === "error") {
     return (
       <div className="py-16 text-center max-w-md mx-auto">
-        <div className="text-3xl mb-4">&#9888;</div>
+        <AlertTriangle className="w-8 h-8 mx-auto mb-4 text-amber-500" />
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
           Something went wrong
         </h1>
@@ -100,7 +101,7 @@ function PaymentSuccessContent() {
         </p>
         <Link
           href="/pricing"
-          className="inline-flex px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-orange-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
+          className="inline-flex px-6 py-3 rounded-lg bg-blue-600 dark:bg-blue-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
         >
           Back to Pricing
         </Link>
@@ -110,7 +111,7 @@ function PaymentSuccessContent() {
 
   return (
     <div className="py-16 text-center max-w-md mx-auto">
-      <div className="text-4xl mb-4">&#127881;</div>
+      <PartyPopper className="w-10 h-10 mx-auto mb-4 text-amber-500" />
       <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
         Welcome to Pro!
       </h1>
@@ -124,13 +125,13 @@ function PaymentSuccessContent() {
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
         <Link
           href="/week/5"
-          className="inline-flex px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-orange-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
+          className="inline-flex px-6 py-3 rounded-lg bg-blue-600 dark:bg-blue-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
         >
           Start Week 5 &rarr;
         </Link>
         <Link
           href="/"
-          className="inline-flex px-6 py-3 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-medium text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+          className="inline-flex px-6 py-3 rounded-lg border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-medium text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
         >
           Back to Overview
         </Link>
@@ -144,7 +145,7 @@ export default function PaymentSuccessClient() {
     <Suspense
       fallback={
         <div className="py-16 text-center">
-          <div className="text-3xl mb-4 animate-pulse">&#9889;</div>
+          <Loader2 className="w-8 h-8 mx-auto mb-4 text-blue-500 animate-spin" />
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
             Verifying your payment...
           </h1>
