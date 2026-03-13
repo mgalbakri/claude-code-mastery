@@ -127,6 +127,32 @@ export function Sidebar({ phases, appendices }: SidebarProps) {
         </div>
       )}
 
+      {/* About */}
+      <div className="mb-2">
+        <Link
+          href="/about"
+          className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
+            pathname === "/about"
+              ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-medium border-l-2 border-indigo-500"
+              : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:text-slate-900 dark:hover:text-slate-200"
+          }`}
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            className="flex-shrink-0"
+          >
+            <circle cx="8" cy="8" r="6.5" />
+            <path d="M8 7v4M8 5.5v0" strokeLinecap="round" />
+          </svg>
+          About
+        </Link>
+      </div>
+
       {/* Newsletter */}
       <div className="mb-5">
         <Link

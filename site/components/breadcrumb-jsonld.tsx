@@ -2,7 +2,7 @@ const BASE_URL = "https://agentcodeacademy.com";
 
 interface BreadcrumbItem {
   name: string;
-  href: string;
+  href?: string;
 }
 
 interface BreadcrumbJsonLdProps {
@@ -32,7 +32,7 @@ export function BreadcrumbJsonLd({ items }: BreadcrumbJsonLdProps) {
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: `${BASE_URL}${item.href}`,
+      ...(item.href && { item: `${BASE_URL}${item.href}` }),
     })),
   };
 

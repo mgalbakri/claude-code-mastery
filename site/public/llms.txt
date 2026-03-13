@@ -1,0 +1,50 @@
+# Agent Code Academy
+
+> A free 12-week course teaching AI-assisted coding with Claude Code. Go from zero coding knowledge to building real applications.
+
+## Course Overview
+
+- URL: https://agentcodeacademy.com
+- Format: Self-paced online course, 12 weeks, 3 phases
+- Cost: Free (Weeks 1-4), Pro $49 (Weeks 1-12)
+- Prerequisites: None — designed for complete beginners
+- Tech Stack: Claude Code, Terminal, Git, React, Next.js, Databases, MCP Servers
+
+## Phase 1: Foundation (Weeks 1-4)
+
+- [Week 1: Your First AI Coding Session](https://agentcodeacademy.com/week/1): Terminal basics, Claude Code setup, first commands
+- [Week 2: Building with Conversations](https://agentcodeacademy.com/week/2): Prompt engineering, iterative development
+- [Week 3: Version Control with Git](https://agentcodeacademy.com/week/3): Git fundamentals, GitHub, branching
+- [Week 4: Your First Web App](https://agentcodeacademy.com/week/4): HTML, CSS, JavaScript, deploying to Vercel
+
+## Phase 2: Building (Weeks 5-8)
+
+- [Week 5: React Fundamentals](https://agentcodeacademy.com/week/5): Components, props, state, JSX
+- [Week 6: Full-Stack with Next.js](https://agentcodeacademy.com/week/6): Pages, routing, API routes, server components
+- [Week 7: Databases & APIs](https://agentcodeacademy.com/week/7): SQL, ORMs, REST APIs, authentication
+- [Week 8: Testing & Quality](https://agentcodeacademy.com/week/8): Unit tests, E2E tests, CI/CD, code review
+
+## Phase 3: Mastery (Weeks 9-12)
+
+- [Week 9: Advanced Claude Code](https://agentcodeacademy.com/week/9): Custom commands, hooks, subagents, CLAUDE.md
+- [Week 10: MCP Servers](https://agentcodeacademy.com/week/10): Model Context Protocol, building custom tools
+- [Week 11: AI Agent Development](https://agentcodeacademy.com/week/11): Multi-agent systems, orchestration
+- [Week 12: Capstone Project](https://agentcodeacademy.com/week/12): Full application build, deployment, portfolio
+
+## Reference Appendices
+
+- [Appendix A: Terminal Command Reference](https://agentcodeacademy.com/appendix/a)
+- [Appendix B: Git Command Reference](https://agentcodeacademy.com/appendix/b)
+- [Appendix C: Claude Code Prompt Patterns](https://agentcodeacademy.com/appendix/c)
+- [Appendix D: CLAUDE.md Templates](https://agentcodeacademy.com/appendix/d)
+- [Appendix E: Debugging Strategies](https://agentcodeacademy.com/appendix/e)
+- [Appendix F: Project Ideas by Difficulty](https://agentcodeacademy.com/appendix/f)
+- [Appendix G: MCP Server Catalog](https://agentcodeacademy.com/appendix/g)
+- [Appendix H: Security Best Practices](https://agentcodeacademy.com/appendix/h)
+- [Appendix I: Performance Optimization](https://agentcodeacademy.com/appendix/i)
+- [Appendix J: Career Paths in AI-Assisted Development](https://agentcodeacademy.com/appendix/j)
+
+## Additional Pages
+
+- [Pricing](https://agentcodeacademy.com/pricing)
+- [Newsletter](https://agentcodeacademy.com/newsletter)

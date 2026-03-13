@@ -69,13 +69,47 @@ export default async function WeekPage({ params }: WeekPageProps) {
   const prevWeek = allWeeks.find((w) => w.number === weekNum - 1);
   const nextWeek = allWeeks.find((w) => w.number === weekNum + 1);
 
+  // LearningResource schema — safe: all data is from server-side static curriculum parsing, not user input
+  const learningResourceSchema = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "LearningResource",
+    name: `Week ${week.number}: ${week.title}`,
+    description: week.objective || week.subtitle || `Week ${week.number} of the 12-week AI coding course.`,
+    url: `https://agentcodeacademy.com/week/${week.number}`,
+    isPartOf: {
+      "@type": "Course",
+      name: "Agent Code Academy — AI Coding Course",
+      url: "https://agentcodeacademy.com",
+    },
+    educationalLevel: "Beginner",
+    learningResourceType: "lesson",
+    inLanguage: "en",
+    position: week.number,
+    datePublished: "2026-02-01",
+    dateModified: "2026-03-13",
+    author: {
+      "@type": "Organization",
+      name: "Agent Code Academy",
+      url: "https://agentcodeacademy.com",
+    },
+    ...(week.topics.length > 0 && {
+      teaches: week.topics.slice(0, 8),
+    }),
+  });
+
   return (
     <article className="py-8 lg:py-12">
       <BreadcrumbJsonLd
         items={[
           { name: "Home", href: "/" },
+          { name: `Phase ${week.phase}: ${week.phaseName}` },
           { name: `Week ${week.number}: ${week.title}`, href: `/week/${week.number}` },
         ]}
+      />
+      {/* Safe: JSON generated from static server-side curriculum data, not user input */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: learningResourceSchema }}
       />
       <EmailBanner />
       <EmailGate weekNumber={weekNum} />

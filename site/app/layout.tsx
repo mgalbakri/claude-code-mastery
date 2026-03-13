@@ -29,6 +29,9 @@ const BASE_URL = "https://agentcodeacademy.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
+  icons: {
+    icon: "/favicon.svg",
+  },
   verification: {
     google: "VutUJSfW9i13bPvjBRkcb89fPLJxE2TihhhaOCh6FBQ",
   },
@@ -143,7 +146,7 @@ export default function RootLayout({
                   },
                 },
               ],
-              numberOfCredits: 12,
+              timeRequired: "P12W",
               educationalLevel: "Beginner",
               inLanguage: "en",
               teaches: [
@@ -156,6 +159,33 @@ export default function RootLayout({
                 "MCP servers",
                 "AI agent development",
               ],
+            }),
+          }}
+        />
+        {/* Safe: WebSite schema generated from static constants, no user input */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "Agent Code Academy",
+              url: BASE_URL,
+              description:
+                "A free 12-week course teaching AI-assisted coding with Claude Code.",
+              publisher: {
+                "@type": "Organization",
+                name: "Agent Code Academy",
+                url: BASE_URL,
+              },
+              potentialAction: {
+                "@type": "SearchAction",
+                target: {
+                  "@type": "EntryPoint",
+                  urlTemplate: `${BASE_URL}/?q={search_term_string}`,
+                },
+                "query-input": "required name=search_term_string",
+              },
             }),
           }}
         />
