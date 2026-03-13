@@ -29,6 +29,9 @@ const BASE_URL = "https://agentcodeacademy.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
+  verification: {
+    google: "VutUJSfW9i13bPvjBRkcb89fPLJxE2TihhhaOCh6FBQ",
+  },
   title: {
     default: "Agent Code Academy — 12-Week AI Coding Course",
     template: "%s — Agent Code Academy",
