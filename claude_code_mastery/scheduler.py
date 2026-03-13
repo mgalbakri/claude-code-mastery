@@ -310,17 +310,36 @@ async def run_scheduled_check() -> dict:
     # --- Auto-apply if enabled ---
     apply_result = None
     if config.get("auto_apply", False) and curriculum_path and curriculum_content:
-        try:
-            apply_result = _auto_apply_gaps(
-                filtered, curriculum_path, curriculum_content, config
-            )
-            result["auto_applied"] = len(apply_result.get("applied", []))
-            result["backup_path"] = apply_result.get("backup_path")
-            if apply_result.get("errors"):
-                result["errors"].extend(apply_result["errors"])
-        except Exception as e:
-            logger.exception("Auto-apply failed: %s", e)
-            result["errors"].append(f"Auto-apply failed: {e}")
+        # Pre-flight: check git health and recover any stale changes
+        health = _check_git_health(curriculum_path)
+        if health["warnings"]:
+            for w in health["warnings"]:
+                logger.warning("Git health: %s", w)
+            result.setdefault("warnings", []).extend(health["warnings"])
+
+        if not health["healthy"]:
+            logger.error("Git health check failed — skipping auto-apply to prevent data loss")
+            result["errors"].append("Auto-apply skipped: git health check failed")
+        else:
+            try:
+                apply_result = _auto_apply_gaps(
+                    filtered, curriculum_path, curriculum_content, config
+                )
+                result["auto_applied"] = len(apply_result.get("applied", []))
+                result["backup_path"] = apply_result.get("backup_path")
+                if apply_result.get("errors"):
+                    result["errors"].extend(apply_result["errors"])
+
+                # Post-apply: verify changes are committed
+                if apply_result.get("applied"):
+                    verify = _post_apply_verify(curriculum_path)
+                    if not verify["verified"]:
+                        for issue in verify["issues"]:
+                            logger.error(issue)
+                            result["errors"].append(issue)
+            except Exception as e:
+                logger.exception("Auto-apply failed: %s", e)
+                result["errors"].append(f"Auto-apply failed: {e}")
 
     # --- Build notification message ---
     if apply_result and apply_result.get("applied"):
@@ -333,6 +352,9 @@ async def run_scheduled_check() -> dict:
         else:
             title = f"📚 Curriculum: {n_applied} update(s) applied (deploy needed)"
 
+        git = apply_result.get("git", {})
+        git_ok = git.get("success", False)
+
         lines = [f"📁 File updated: {curriculum_path}"]
         lines.append(f"💾 Backup: {apply_result.get('backup_path', 'N/A')}")
         lines.append("")
@@ -341,6 +363,14 @@ async def run_scheduled_check() -> dict:
             week_label = f"Week {item['week']}" if item["week"] > 0 else "Appendix"
             lines.append(f"  - [{week_label}] {item['section']} ({item['action']})")
         lines.append("")
+        if git_ok:
+            sha = git.get("commit_sha", "?")
+            lines.append(f"✅ Git committed & pushed ({sha})")
+        elif git.get("commit_sha"):
+            lines.append(f"⚠️  Git committed ({git['commit_sha']}) but push failed: {git.get('error')}")
+        else:
+            lines.append(f"⚠️  Git commit failed: {git.get('error', 'unknown')}")
+            lines.append("   Changes are saved locally but NOT in git!")
         if deploy_ok:
             lines.append(f"✅ Site deployed: {LIVE_SITE_URL}")
         else:
@@ -448,6 +478,112 @@ async def _run_newsletter_if_due(config: dict) -> dict | None:
     return await run_newsletter_pipeline(nl_config, send=True)
 
 
+# --- Git health checks ---
+
+
+def _check_git_health(curriculum_path: str) -> dict:
+    """Pre-flight check for git state before auto-applying.
+
+    Detects uncommitted curriculum drift (changes from a previous run that
+    were never committed), dirty working tree, or detached HEAD.
+
+    Returns dict with: healthy, warnings, uncommitted_changes.
+    """
+    repo_root = Path(curriculum_path).resolve().parent
+    result = {"healthy": True, "warnings": [], "uncommitted_changes": False}
+
+    def _git(*args: str) -> subprocess.CompletedProcess:
+        return subprocess.run(
+            ["git", *args],
+            cwd=str(repo_root),
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+
+    try:
+        # Check if we're in a git repo
+        check = _git("rev-parse", "--git-dir")
+        if check.returncode != 0:
+            result["healthy"] = False
+            result["warnings"].append("Not a git repository")
+            return result
+
+        # Check for uncommitted curriculum changes (drift from prior runs)
+        status = _git("status", "--porcelain", "curriculum.md", "site/curriculum.md")
+        if status.stdout.strip():
+            result["uncommitted_changes"] = True
+            result["warnings"].append(
+                f"Uncommitted curriculum changes detected: {status.stdout.strip()}"
+            )
+            logger.warning(
+                "Curriculum drift detected — committing stale changes before new apply"
+            )
+            # Auto-recover: commit the stale changes so they aren't lost
+            _git("add", "curriculum.md", "site/curriculum.md")
+            recover = _git(
+                "commit", "-m",
+                "Auto-commit: recover uncommitted curriculum changes from prior scheduler run"
+            )
+            if recover.returncode == 0:
+                push = _git("push")
+                if push.returncode == 0:
+                    logger.info("Recovered and pushed stale curriculum changes")
+                    result["warnings"].append("Recovered stale changes (committed + pushed)")
+                else:
+                    result["warnings"].append(f"Recovered stale changes (committed) but push failed: {push.stderr.strip()[:100]}")
+            else:
+                result["warnings"].append(f"Failed to recover stale changes: {recover.stderr.strip()[:100]}")
+                result["healthy"] = False
+
+        # Check for detached HEAD
+        branch = _git("symbolic-ref", "--short", "HEAD")
+        if branch.returncode != 0:
+            result["healthy"] = False
+            result["warnings"].append("Detached HEAD — cannot push changes")
+
+        # Check if we can reach origin
+        remote = _git("remote", "get-url", "origin")
+        if remote.returncode != 0:
+            result["warnings"].append("No git remote 'origin' configured")
+
+    except Exception as e:
+        result["healthy"] = False
+        result["warnings"].append(f"Git health check error: {e}")
+
+    return result
+
+
+def _post_apply_verify(curriculum_path: str) -> dict:
+    """Post-apply verification: ensure changes are committed and pushed.
+
+    Returns dict with: verified, issues.
+    """
+    repo_root = Path(curriculum_path).resolve().parent
+    result = {"verified": True, "issues": []}
+
+    try:
+        status = subprocess.run(
+            ["git", "status", "--porcelain", "curriculum.md", "site/curriculum.md"],
+            cwd=str(repo_root),
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        if status.stdout.strip():
+            result["verified"] = False
+            result["issues"].append(
+                f"CRITICAL: Curriculum changes NOT committed after apply! "
+                f"Dirty files: {status.stdout.strip()}"
+            )
+            logger.error("Post-apply verification FAILED — uncommitted changes remain")
+    except Exception as e:
+        result["verified"] = False
+        result["issues"].append(f"Verification error: {e}")
+
+    return result
+
+
 # --- Auto-apply engine ---
 
 
@@ -529,9 +665,16 @@ def _auto_apply_gaps(
             )
             # Sync to site/curriculum.md so Vercel deploys pick up changes
             _sync_to_site(curriculum_path, current_content)
-            # Auto-deploy to Vercel
-            deploy = _deploy_to_vercel(curriculum_path)
-            apply_result["deploy"] = deploy
+            # Commit, push, and deploy via git (triggers Vercel CI)
+            git_result = _git_commit_and_push(curriculum_path, apply_result["applied"])
+            apply_result["git"] = git_result
+            if git_result["success"]:
+                # Deploy via Vercel after pushing (CI will also deploy, but
+                # direct deploy ensures immediate update even if CI is slow)
+                deploy = _deploy_to_vercel(curriculum_path)
+                apply_result["deploy"] = deploy
+            else:
+                apply_result["deploy"] = {"success": False, "url": None, "error": f"Git push failed: {git_result['error']}"}
         else:
             apply_result["errors"].append("Failed to save curriculum after applying updates")
 
@@ -540,7 +683,78 @@ def _auto_apply_gaps(
 
 # --- Site sync & deploy ---
 
-LIVE_SITE_URL = "https://claude-code-mastery-iota.vercel.app"
+LIVE_SITE_URL = "https://agentcodeacademy.com"
+
+
+def _git_commit_and_push(curriculum_path: str, applied: list[dict]) -> dict:
+    """Commit curriculum changes and push to origin.
+
+    Creates a commit with both curriculum.md and site/curriculum.md,
+    then pushes to the current branch. This ensures changes are tracked
+    in git and triggers Vercel CI/CD deployment.
+
+    Returns dict with: success, error, commit_sha.
+    """
+    repo_root = Path(curriculum_path).resolve().parent
+
+    def _git(*args: str) -> subprocess.CompletedProcess:
+        return subprocess.run(
+            ["git", *args],
+            cwd=str(repo_root),
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+
+    try:
+        # Check for uncommitted curriculum changes
+        status = _git("status", "--porcelain", "curriculum.md", "site/curriculum.md")
+        if not status.stdout.strip():
+            logger.info("No curriculum changes to commit (already in sync)")
+            return {"success": True, "error": None, "commit_sha": None}
+
+        # Stage curriculum files
+        _git("add", "curriculum.md", "site/curriculum.md")
+
+        # Build commit message from applied updates
+        summaries = []
+        for item in applied:
+            week_label = f"Week {item['week']}" if item["week"] > 0 else "Appendix"
+            summaries.append(f"- {week_label}: {item['section']}")
+        details = "\n".join(summaries)
+
+        commit_msg = f"Auto-update curriculum: {len(applied)} change(s)\n\n{details}\n\nApplied by claude-code-mastery scheduler"
+
+        result = _git("commit", "-m", commit_msg)
+        if result.returncode != 0:
+            error = result.stderr.strip()[:200]
+            logger.warning("Git commit failed: %s", error)
+            return {"success": False, "error": f"commit failed: {error}", "commit_sha": None}
+
+        # Get commit SHA
+        sha_result = _git("rev-parse", "--short", "HEAD")
+        commit_sha = sha_result.stdout.strip()
+        logger.info("Committed curriculum update: %s", commit_sha)
+
+        # Push to origin
+        push = _git("push")
+        if push.returncode != 0:
+            error = push.stderr.strip()[:200]
+            logger.warning("Git push failed: %s", error)
+            return {"success": False, "error": f"push failed: {error}", "commit_sha": commit_sha}
+
+        logger.info("Pushed curriculum update to origin")
+        return {"success": True, "error": None, "commit_sha": commit_sha}
+
+    except subprocess.TimeoutExpired:
+        logger.warning("Git operation timed out")
+        return {"success": False, "error": "git operation timed out", "commit_sha": None}
+    except FileNotFoundError:
+        logger.warning("git not found in PATH")
+        return {"success": False, "error": "git not found", "commit_sha": None}
+    except Exception as e:
+        logger.warning("Git error: %s", e)
+        return {"success": False, "error": str(e), "commit_sha": None}
 
 
 def _sync_to_site(curriculum_path: str, content: str) -> None:
@@ -575,11 +789,13 @@ def _sync_to_site(curriculum_path: str, content: str) -> None:
 def _deploy_to_vercel(curriculum_path: str) -> dict:
     """Deploy the site to Vercel after curriculum updates.
 
-    Runs ``npx vercel deploy --prod --yes --force`` in the site/ directory.
+    Runs ``npx vercel deploy --prod --yes --force`` from the repo root.
+    The Vercel project has Root Directory set to ``site/`` on vercel.com,
+    so we must run from the repo root to avoid a ``site/site`` path error.
     Returns dict with: success, url, error.
     """
-    src = Path(curriculum_path).resolve()
-    site_dir = src.parent / "site"
+    repo_root = Path(curriculum_path).resolve().parent
+    site_dir = repo_root / "site"
 
     if not (site_dir / "package.json").is_file():
         return {"success": False, "url": None, "error": "site/ directory not found"}
@@ -587,7 +803,7 @@ def _deploy_to_vercel(curriculum_path: str) -> dict:
     try:
         result = subprocess.run(
             ["npx", "vercel", "deploy", "--prod", "--yes", "--force"],
-            cwd=str(site_dir),
+            cwd=str(repo_root),
             capture_output=True,
             text=True,
             timeout=300,  # 5 minute timeout
