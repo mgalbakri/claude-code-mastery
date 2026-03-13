@@ -24,11 +24,53 @@ const phaseColors: Record<
   },
 };
 
+const faqData = [
+  {
+    q: "Do I need coding experience to start?",
+    a: "No. Agent Code Academy is designed for complete beginners. Week 1 starts with opening a terminal for the first time. Claude Code acts as your AI pair programmer throughout.",
+  },
+  {
+    q: "What will I be able to build after the course?",
+    a: "By Week 12, you'll build and deploy a full-stack web application with a database, API, authentication, and tests. You'll also know how to create MCP servers and AI agents.",
+  },
+  {
+    q: "Is the course really free?",
+    a: "Weeks 1 through 4 (Phase 1: Foundation) are completely free. The full 12-week course including Phase 2 (Building) and Phase 3 (Mastery) is available for a one-time $49 Pro upgrade.",
+  },
+  {
+    q: "How is the curriculum kept up to date?",
+    a: "An MCP server monitors Claude Code releases, documentation changes, and community sources. The curriculum is automatically updated weekly so lessons always reflect the latest features.",
+  },
+  {
+    q: "What tools do I need?",
+    a: "A computer with internet access, a Claude Pro or Max subscription for Claude Code access, and a free GitHub account. All other tools are introduced during the course.",
+  },
+];
+
+// Safe: FAQ schema generated from static data array above, no user input involved
+const faqSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqData.map(({ q, a }) => ({
+    "@type": "Question",
+    name: q,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: a,
+    },
+  })),
+});
+
 export default function HomePage() {
   const curriculum = parseCurriculum();
 
   return (
     <div className="py-8 lg:py-16">
+      {/* Safe: FAQ schema from static data defined at module level */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: faqSchema }}
+      />
       {/* Hero Section */}
       <section className="text-center mb-20">
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 dark:text-white mb-4">
@@ -151,6 +193,40 @@ export default function HomePage() {
           </div>
         </section>
       )}
+
+      {/* About */}
+      <section className="mt-20 mb-12">
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+          About Agent Code Academy
+        </h2>
+        <p className="text-base text-slate-700 dark:text-slate-300 leading-relaxed max-w-3xl">
+          Agent Code Academy is a free, self-paced course that teaches complete
+          beginners how to build real applications using AI-assisted coding with
+          Claude Code. Over 12 weeks and 3 phases, students progress from their
+          first terminal command to deploying full-stack apps, building MCP
+          servers, and developing AI agents. The curriculum is auto-updated
+          weekly to reflect the latest Claude Code features and best practices.
+        </p>
+      </section>
+
+      {/* FAQ */}
+      <section className="mb-12">
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">
+          Frequently Asked Questions
+        </h2>
+        <dl className="space-y-6">
+          {faqData.map(({ q, a }) => (
+            <div key={q}>
+              <dt className="text-base font-semibold text-slate-900 dark:text-white mb-1">
+                {q}
+              </dt>
+              <dd className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                {a}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </section>
 
       {/* Email Signup */}
       <EmailSignup />
