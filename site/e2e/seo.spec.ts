@@ -40,17 +40,27 @@ test.describe("SEO: Homepage", () => {
   });
 
   test("has JSON-LD Course schema", async ({ page }) => {
-    const jsonLd = page.locator('script[type="application/ld+json"]');
-    const content = await jsonLd.textContent();
-    expect(content).toBeTruthy();
-    const data = JSON.parse(content!);
-    expect(data["@type"]).toBe("Course");
-    expect(data.name).toContain("Agent Code Academy");
-    expect(data.isAccessibleForFree).toBe(true);
-    expect(Array.isArray(data.hasCourseInstance)).toBe(true);
-    expect(data.hasCourseInstance).toHaveLength(2);
-    expect(data.hasCourseInstance[0].offers.price).toBe("0");
-    expect(data.hasCourseInstance[1].offers.price).toBe("49");
+    const scripts = page.locator('script[type="application/ld+json"]');
+    const count = await scripts.count();
+    let data: Record<string, unknown> | null = null;
+    for (let i = 0; i < count; i++) {
+      const content = await scripts.nth(i).textContent();
+      if (content) {
+        const parsed = JSON.parse(content);
+        if (parsed["@type"] === "Course") {
+          data = parsed;
+          break;
+        }
+      }
+    }
+    expect(data).toBeTruthy();
+    expect(data!["@type"]).toBe("Course");
+    expect(data!.name).toContain("Agent Code Academy");
+    expect(data!.isAccessibleForFree).toBe(true);
+    expect(Array.isArray(data!.hasCourseInstance)).toBe(true);
+    expect(data!.hasCourseInstance).toHaveLength(2);
+    expect((data!.hasCourseInstance as Array<{ offers: { price: string } }>)[0].offers.price).toBe("0");
+    expect((data!.hasCourseInstance as Array<{ offers: { price: string } }>)[1].offers.price).toBe("49");
   });
 });
 
