@@ -11,7 +11,8 @@
     "test": "playwright test",
     "test:smoke": "playwright test e2e/smoke.spec.ts",
     "test:seo": "playwright test e2e/seo.spec.ts",
-    "test:all": "playwright test"
+    "test:all": "playwright test",
+    "test:api": "playwright test e2e/api-health.spec.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.95.3",

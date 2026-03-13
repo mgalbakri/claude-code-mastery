@@ -50,6 +50,15 @@ jobs:
       - name: Copy curriculum.md for build
         run: cp ../curriculum.md . 2>/dev/null || true
 
+      - name: API health check (fast-fail)
+        run: |
+          STATUS=$(curl -s -o /tmp/health.json -w "%{http_code}" https://agentcodeacademy.com/api/health?verbose=true)
+          cat /tmp/health.json | jq .
+          if [ "$STATUS" != "200" ]; then
+            echo "::error::Health check failed with HTTP $STATUS"
+            exit 1
+          fi
+
       - name: Run Playwright tests against production
         run: npx playwright test
         env:
