@@ -14,8 +14,8 @@ export function ProPromoBanner() {
   if (isLoading || isPremium) return null;
 
   return (
-    <section className="my-12 gradient-border-animated">
-      <div className="relative z-10 p-6 sm:p-8 rounded-xl bg-white dark:bg-slate-900">
+    <section className="my-12">
+      <div className="relative z-10 p-6 sm:p-8 rounded-lg bg-white dark:bg-slate-900">
         <div className="flex flex-col sm:flex-row items-center gap-6">
           <div className="flex-1 text-center sm:text-left">
             <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
@@ -36,11 +36,11 @@ export function ProPromoBanner() {
             </div>
             <Link
               href="/pricing"
-              className="inline-flex items-center px-6 py-3 rounded-lg bg-gradient-to-r from-indigo-500 to-orange-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity shadow-lg shadow-indigo-500/20"
+              className="inline-flex items-center px-6 py-3 rounded-lg bg-blue-600 dark:bg-blue-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
             >
               Get Pro Access &rarr;
             </Link>
-            <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-2">
+            <p className="text-[10px] text-slate-500 dark:text-slate-500 mt-2">
               30-day money-back guarantee
             </p>
           </div>

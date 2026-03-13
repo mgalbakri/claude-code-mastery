@@ -33,9 +33,24 @@ pre code.hljs {
   color: #e2e8f0;
 }
 
-/* Smooth scrolling */
+/* Smooth scrolling — respect motion preferences */
 html {
   scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Custom scrollbar for sidebar */
@@ -56,48 +71,30 @@ nav::-webkit-scrollbar-thumb {
   background: #334155;
 }
 
-/* ─── Gradient text utility ─── */
+/* ─── Accent text utility ─── */
 .gradient-text {
-  background: linear-gradient(135deg, #6366f1, #f97316);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #2563eb;
 }
 
-/* ─── Animated gradient border ─── */
-@property --gradient-angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
+.dark .gradient-text {
+  color: #3b82f6;
 }
 
-@keyframes gradient-rotate {
-  to {
-    --gradient-angle: 360deg;
-  }
+/* ─── Focus visible for keyboard accessibility ─── */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
-.gradient-border-animated {
-  position: relative;
-  border-radius: 1rem;
-}
-
-.gradient-border-animated::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 2px;
-  background: conic-gradient(
-    from var(--gradient-angle),
-    #6366f1,
-    #f97316,
-    #6366f1
-  );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  animation: gradient-rotate 4s linear infinite;
-  pointer-events: none;
+.dark a:focus-visible,
+.dark button:focus-visible,
+.dark input:focus-visible,
+.dark select:focus-visible,
+.dark textarea:focus-visible {
+  outline-color: #3b82f6;
 }

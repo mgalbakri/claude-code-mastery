@@ -72,52 +72,65 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: faqSchema }}
       />
       {/* Hero Section */}
-      <section className="text-center mb-20">
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 dark:text-white mb-4">
-          Agent <span className="gradient-text">Code</span> Academy
-        </h1>
-        <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-2">
-          {curriculum.goal}
-        </p>
-        <p className="text-sm text-slate-500 dark:text-slate-500 mb-8">
-          {curriculum.edition} · {curriculum.duration}
-        </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-          <Link
-            href="/week/1"
-            className="inline-flex items-center px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-orange-500 text-white font-semibold text-base hover:opacity-90 transition-opacity shadow-lg shadow-indigo-500/20"
-          >
-            Start Learning →
-          </Link>
-          <Link
-            href="#curriculum"
-            className="inline-flex items-center px-6 py-3 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-medium text-base hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
-          >
-            View Curriculum
-          </Link>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-20">
-        {[
-          { value: curriculum.phases.reduce((sum, p) => sum + p.weeks.length, 0), label: "Weeks" },
-          { value: curriculum.phases.length, label: "Phases" },
-          { value: curriculum.phases.reduce((sum, p) => sum + p.weeks.reduce((ws, w) => ws + w.topics.length, 0), 0), label: "Topics" },
-          { value: curriculum.appendices.length, label: "Appendices" },
-        ].map((stat) => (
-          <div
-            key={stat.label}
-            className="text-center p-4 rounded-xl border border-slate-200 dark:border-slate-800/50"
-          >
-            <p className="text-3xl font-bold text-slate-900 dark:text-white">
-              {stat.value}
-            </p>
-            <p className="text-sm text-slate-500 dark:text-slate-400">
-              {stat.label}
-            </p>
+      <section className="mb-20 lg:grid lg:grid-cols-2 lg:gap-12 lg:items-center">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400 mb-3">
+            Free 12-week course
+          </p>
+          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-slate-900 dark:text-white mb-4">
+            Learn to code<br />
+            with <span className="gradient-text">AI</span>
+          </h1>
+          <p className="text-lg text-slate-600 dark:text-slate-400 mb-6 max-w-lg">
+            {curriculum.goal}
+          </p>
+          <div className="flex flex-wrap items-center gap-3 mb-8">
+            <Link
+              href="/week/1"
+              className="inline-flex items-center px-6 py-3 rounded-lg bg-blue-600 dark:bg-blue-500 text-white font-semibold text-base hover:opacity-90 transition-opacity"
+            >
+              Start Learning →
+            </Link>
+            <Link
+              href="#curriculum"
+              className="inline-flex items-center px-6 py-3 rounded-lg border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-medium text-base hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
+            >
+              View Curriculum
+            </Link>
           </div>
-        ))}
+          <div className="flex items-center gap-6 text-sm text-slate-500 dark:text-slate-400">
+            <span><strong className="text-slate-900 dark:text-white">{curriculum.phases.reduce((sum, p) => sum + p.weeks.length, 0)}</strong> weeks</span>
+            <span className="w-px h-4 bg-slate-200 dark:bg-slate-700" />
+            <span><strong className="text-slate-900 dark:text-white">{curriculum.phases.reduce((sum, p) => sum + p.weeks.reduce((ws, w) => ws + w.topics.length, 0), 0)}</strong> topics</span>
+            <span className="w-px h-4 bg-slate-200 dark:bg-slate-700" />
+            <span><strong className="text-slate-900 dark:text-white">{curriculum.appendices.length}</strong> appendices</span>
+          </div>
+        </div>
+
+        {/* Terminal mockup */}
+        <div className="hidden lg:block">
+          <div className="rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div className="flex items-center gap-1.5 px-4 py-2.5 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+              <span className="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-600" />
+              <span className="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-600" />
+              <span className="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-600" />
+              <span className="ml-3 text-xs text-slate-500 dark:text-slate-400 font-mono">terminal</span>
+            </div>
+            <div className="p-4 bg-slate-950 text-sm font-mono leading-relaxed">
+              <p className="text-slate-500">$ claude</p>
+              <p className="text-emerald-400 mt-1">Welcome to Claude Code</p>
+              <p className="text-slate-400 mt-2">╭────────────────────────────────╮</p>
+              <p className="text-slate-400">│ Week 1: Your First AI Project  │</p>
+              <p className="text-slate-400">╰────────────────────────────────╯</p>
+              <p className="text-blue-400 mt-2">&gt; Build a personal website with</p>
+              <p className="text-blue-400">  zero coding experience.</p>
+              <p className="text-slate-500 mt-2">$ <span className="text-white animate-pulse">_</span></p>
+            </div>
+          </div>
+          <p className="text-xs text-slate-500 dark:text-slate-500 mt-2">
+            {curriculum.edition} · {curriculum.duration}
+          </p>
+        </div>
       </section>
 
       {/* Phases & Weeks */}
@@ -179,13 +192,13 @@ export default function HomePage() {
                 href={`/appendix/${appendix.letter.toLowerCase()}`}
                 className="flex items-center gap-3 py-3 px-2 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors group"
               >
-                <span className="text-xs text-slate-400 dark:text-slate-500 font-mono w-8 flex-shrink-0">
+                <span className="text-xs text-slate-500 dark:text-slate-500 font-mono w-8 flex-shrink-0">
                   {appendix.letter}
                 </span>
-                <span className="font-medium text-slate-900 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                <span className="font-medium text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                   {appendix.title}
                 </span>
-                <span className="ml-auto text-slate-300 dark:text-slate-700 group-hover:text-indigo-400 dark:group-hover:text-indigo-500 transition-colors text-sm">
+                <span className="ml-auto text-slate-300 dark:text-slate-700 group-hover:text-blue-400 dark:group-hover:text-blue-500 transition-colors text-sm">
                   &rarr;
                 </span>
               </Link>
@@ -248,7 +261,7 @@ export default function HomePage() {
               rel="noopener noreferrer sponsored"
               className="flex items-center gap-4 py-3 px-2 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors group"
             >
-              <span className="text-[10px] font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500 w-16 flex-shrink-0">
+              <span className="text-[10px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-500 w-16 flex-shrink-0">
                 {tool.category}
               </span>
               <span className="font-medium text-slate-900 dark:text-slate-100 flex-shrink-0">
@@ -257,13 +270,13 @@ export default function HomePage() {
               <span className="text-sm text-slate-500 dark:text-slate-400 truncate hidden sm:block">
                 {tool.description}
               </span>
-              <span className="ml-auto text-slate-300 dark:text-slate-700 group-hover:text-indigo-400 dark:group-hover:text-indigo-500 transition-colors text-sm flex-shrink-0">
+              <span className="ml-auto text-slate-300 dark:text-slate-700 group-hover:text-blue-400 dark:group-hover:text-blue-500 transition-colors text-sm flex-shrink-0">
                 &rarr;
               </span>
             </a>
           ))}
         </div>
-        <p className="text-[10px] text-slate-400 dark:text-slate-600 mt-3">
+        <p className="text-[10px] text-slate-500 dark:text-slate-600 mt-3">
           Some links may be affiliate links. We only recommend tools we genuinely use.
         </p>
       </section>

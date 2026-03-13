@@ -17,7 +17,7 @@ export function WeekCard({ week }: WeekCardProps) {
   return (
     <Link
       href={`/week/${week.number}`}
-      className="block p-5 rounded-xl border border-slate-200 dark:border-slate-800/50 hover:border-indigo-300 dark:hover:border-indigo-500/40 hover:shadow-md hover:-translate-y-0.5 transition-all bg-white dark:bg-slate-900/50"
+      className="block p-5 rounded-lg border-l-4 border-l-slate-200 dark:border-l-slate-700 border border-slate-100 dark:border-slate-800/50 hover:border-l-blue-500 dark:hover:border-l-blue-400 hover:shadow-sm transition-all bg-white dark:bg-slate-900/50"
     >
       <div className="flex items-start gap-3">
         <span className="relative flex-shrink-0 w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sm font-bold text-slate-600 dark:text-slate-400">

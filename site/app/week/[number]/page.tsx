@@ -14,6 +14,8 @@ interface WeekPageProps {
   params: Promise<{ number: string }>;
 }
 
+export const revalidate = 3600;
+
 export function generateStaticParams() {
   const weeks = getAllWeeks();
   return weeks.map((w) => ({ number: String(w.number) }));
@@ -149,7 +151,7 @@ export default async function WeekPage({ params }: WeekPageProps) {
       <div className="grid sm:grid-cols-2 gap-4 mb-10">
         {/* Objective */}
         {week.objective && (
-          <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/40">
+          <div className="p-4 rounded-lg border-l-4 border-l-blue-500 bg-blue-50 dark:bg-blue-950/20">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400 mb-1.5">
               Objective
             </h3>
@@ -161,7 +163,7 @@ export default async function WeekPage({ params }: WeekPageProps) {
 
         {/* Deliverable */}
         {week.deliverable && (
-          <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/40">
+          <div className="p-4 rounded-lg border-l-4 border-l-amber-500 bg-amber-50 dark:bg-amber-950/20">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400 mb-1.5">
               Deliverable
             </h3>
@@ -206,7 +208,7 @@ export default async function WeekPage({ params }: WeekPageProps) {
                   key={i}
                   className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-300"
                 >
-                  <span className="mt-0.5 w-1.5 h-1.5 rounded-full bg-indigo-400 dark:bg-indigo-600 flex-shrink-0" />
+                  <span className="mt-0.5 w-1.5 h-1.5 rounded-full bg-blue-400 dark:bg-blue-600 flex-shrink-0" />
                   {activity}
                 </li>
               ))}
@@ -257,7 +259,7 @@ export default async function WeekPage({ params }: WeekPageProps) {
           >
             <span>←</span>
             <div>
-              <div className="text-xs text-slate-400 dark:text-slate-500">
+              <div className="text-xs text-slate-500 dark:text-slate-500">
                 Previous
               </div>
               <div className="font-medium">
@@ -275,7 +277,7 @@ export default async function WeekPage({ params }: WeekPageProps) {
             className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors text-right"
           >
             <div>
-              <div className="text-xs text-slate-400 dark:text-slate-500">
+              <div className="text-xs text-slate-500 dark:text-slate-500">
                 Next
               </div>
               <div className="font-medium">
@@ -290,7 +292,7 @@ export default async function WeekPage({ params }: WeekPageProps) {
             className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors text-right"
           >
             <div>
-              <div className="text-xs text-slate-400 dark:text-slate-500">
+              <div className="text-xs text-slate-500 dark:text-slate-500">
                 Finished!
               </div>
               <div className="font-medium">Back to Overview</div>

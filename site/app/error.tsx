@@ -1,0 +1,26 @@
+"use client";
+
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 text-center">
+      <h1 className="text-3xl font-semibold text-slate-900 dark:text-white mb-2">
+        Something went wrong
+      </h1>
+      <p className="text-slate-600 dark:text-slate-400 mb-6 max-w-md">
+        {error.message || "An unexpected error occurred. Please try again."}
+      </p>
+      <button
+        onClick={reset}
+        className="px-5 py-2.5 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-medium hover:opacity-90 transition-opacity"
+      >
+        Try again
+      </button>
+    </div>
+  );
+}

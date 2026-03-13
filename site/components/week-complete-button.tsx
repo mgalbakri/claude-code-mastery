@@ -29,10 +29,10 @@ export function WeekCompleteButton({ weekNumber }: WeekCompleteButtonProps) {
       <button
         onClick={handleToggle}
         disabled={isToggling}
-        className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+        className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
           completed
             ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
-            : "bg-gradient-to-r from-indigo-500 to-orange-500 text-white hover:opacity-90 shadow-lg shadow-indigo-500/20"
+            : "bg-blue-600 dark:bg-blue-500 text-white hover:opacity-90"
         }`}
       >
         {completed ? (
