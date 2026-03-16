@@ -493,6 +493,11 @@ Several Claude Code releases shipped this week:
 
 > **Key takeaway:** v2.1.45 is the most significant — it adds Sonnet 4.6 model support and a new `spinnerTipsOverride` setting. Run `claude update` to get the latest.
 
+
+**Claude Code npm 2.1.76 (latest)** (added 2026-03-14)
+@anthropic-ai/claude-code@2.1.76 published to...
+Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.76
+
 ---
 
 ### WEEK 2: Git & Version Control
@@ -4129,3 +4134,12 @@ This pattern complements the agent orchestration and parallel session techniques
 - **Claude Code CLI:** More powerful for developers — supports hooks, MCP servers, plugins, and full terminal integration
 
 > **Source:** [Introducing Cowork](https://www.youtube.com/watch?v=kQRu7DdTTVA)
+
+
+---
+
+### Appendix: Product
+
+**Product** (added Feb 17, 20)
+Sonnet 4.6 delivers frontier performance across coding, agents, and professional work at scale.
+Source: https://www.anthropic.com/news/claude-sonnet-4-6
