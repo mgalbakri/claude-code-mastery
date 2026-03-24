@@ -498,6 +498,11 @@ Several Claude Code releases shipped this week:
 @anthropic-ai/claude-code@2.1.76 published to...
 Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.76
 
+
+**Claude Code npm 2.1.81 (latest)** (added 2026-03-20)
+@anthropic-ai/claude-code@2.1.81 published to...
+Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.81
+
 ---
 
 ### WEEK 2: Git & Version Control
