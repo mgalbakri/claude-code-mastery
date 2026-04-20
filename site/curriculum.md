@@ -521,6 +521,11 @@ Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.92
 @anthropic-ai/claude-code@2.1.104 published to...
 Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.104
 
+
+**Claude Code npm 2.1.114 (latest)** (added 2026-04-17)
+@anthropic-ai/claude-code@2.1.114 published to...
+Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.114
+
 ---
 
 ### WEEK 2: Git & Version Control
@@ -1357,6 +1362,11 @@ Recent Claude Code releases included significant system prompt updates:
 - **Recommendation:** Use the official **Claude Code CLI** (`@anthropic-ai/claude-code`) which fully supports both API keys and Claude subscriptions.
 
 > **Takeaway:** Third-party tools can change their integration support at any time. The official Claude Code CLI is the most reliable way to access Claude from the terminal.
+
+
+**Introducing Claude Opus 4.7** (added Apr 16, 20)
+Our latest Opus model brings stronger performance across coding, agents, vision, and multi-step tasks, with greater thoroughness and consistency on...
+Source: https://www.anthropic.com/news/claude-opus-4-7
 
 ---
 
