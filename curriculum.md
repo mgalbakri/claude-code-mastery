@@ -541,6 +541,11 @@ Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.128
 @anthropic-ai/claude-code@2.1.138 published to...
 Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.138
 
+
+**Claude Code npm 2.1.143 (latest)** (added 2026-05-15)
+@anthropic-ai/claude-code@2.1.143 published to...
+Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.143
+
 ---
 
 ### WEEK 2: Git & Version Control
