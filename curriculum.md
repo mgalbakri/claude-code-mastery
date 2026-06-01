@@ -551,6 +551,11 @@ Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.143
 @anthropic-ai/claude-code@2.1.150 published to...
 Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.150
 
+
+**Claude Code npm 2.1.159 (latest)** (added 2026-05-31)
+@anthropic-ai/claude-code@2.1.159 published to...
+Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.159
+
 ---
 
 ### WEEK 2: Git & Version Control
@@ -1392,6 +1397,11 @@ Recent Claude Code releases included significant system prompt updates:
 **Introducing Claude Opus 4.7** (added Apr 16, 20)
 Our latest Opus model brings stronger performance across coding, agents, vision, and multi-step tasks, with greater thoroughness and consistency on...
 Source: https://www.anthropic.com/news/claude-opus-4-7
+
+
+**Introducing Claude Opus 4.8** (added May 28, 20)
+An upgrade to our Opus class of models, with stronger performance across coding, agentic tasks, and professional work, and the consistency to handle...
+Source: https://www.anthropic.com/news/claude-opus-4-8
 
 ---
 
