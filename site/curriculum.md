@@ -556,6 +556,11 @@ Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.150
 @anthropic-ai/claude-code@2.1.159 published to...
 Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.159
 
+
+**Claude Code npm 2.1.168 (latest)** (added 2026-06-06)
+@anthropic-ai/claude-code@2.1.168 published to...
+Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.168
+
 ---
 
 ### WEEK 2: Git & Version Control
@@ -3563,6 +3568,9 @@ Document the orchestration in a `docs/agent-workflow.md` file.
 - Enable agent teams with `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` and try a multi-agent task
 - Set up a `TeammateIdle` hook to monitor agent collaboration
 - Test agent teams in a tmux session
+
+
+> **Deprecation Notice (2026-06-07):** The Illusion of Finished Work in Claude Code. I wrote a short essay about something I keep noticing with Claude Code: the output often has the shape of finished work before it has actually been... [Source](https://www.reddit.com/r/ClaudeAI)
 
 ---
 
