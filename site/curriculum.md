@@ -305,41 +305,38 @@ Each folder is separated by a colon. When you install new tools (like Node.js), 
 
 **Installing Node.js**
 
-Node.js is the engine that Claude Code runs on. You need it installed before you can use Claude Code. npm (Node Package Manager) comes bundled with Node.js — think of npm as an app store for code libraries.
+**Installing Claude Code**
 
-**Mac (using Homebrew):**
+Claude Code uses a native installer that handles everything automatically — no Node.js or npm required.
 
-Homebrew is a package manager for Mac — an app store you use from the terminal. First, install Homebrew if you do not have it:
-
-```
-$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-Then install Node.js:
+**Mac / Linux / WSL:**
 
 ```
-$ brew install node
+$ curl -fsSL https://claude.ai/install.sh | bash
 ```
 
-**Windows (using the installer):**
-
-Go to https://nodejs.org and download the LTS version. Run the installer and follow the prompts. Restart your terminal afterward.
-
-**Linux (using nvm):**
+**Windows (PowerShell):**
 
 ```
-$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-$ nvm install --lts
+irm https://claude.ai/install.ps1 | iex
 ```
+
+**Alternative methods:**
+
+```
+# Homebrew (Mac)
+$ brew install --cask claude-code
+
+# WinGet (Windows)
+winget install Anthropic.ClaudeCode
+```
+
+Native installations auto-update in the background. Homebrew and WinGet require manual updates (`brew upgrade claude-code` or `winget upgrade Anthropic.ClaudeCode`).
 
 **Verify the installation:**
 
 ```
-$ node --version
-v22.13.1
-
-$ npm --version
-10.9.2
+$ claude --version
 ```
 
 If you see version numbers (the exact numbers may differ), you are ready. If you see "command not found," close your terminal, reopen it, and try again — some installations need a terminal restart.
@@ -442,10 +439,10 @@ Document every command you used in a file called `cleanup-log.txt` (use `echo "c
 - **External editor shortcut** (Ctrl+G) added to the help menu (v2.1.20)
 - **Customizable spinner verbs** via `spinnerVerbs` setting (v2.1.23)
 - **mTLS and proxy connectivity** fixed for corporate proxies and client certificates (v2.1.23)
-- **Installation change:** npm installations are deprecated — use `claude install` instead (v2.1.15)
+- **Installation change:** npm installations are deprecated — use the native installer (`claude.ai/install.sh`)
 
 **Exercise:**
-- Run `claude install` if you previously installed via npm
+- Verify your installation is up to date with `claude --version`
 - Try Ctrl+G to open an external editor from within Claude Code
 - Customize your spinner verbs in settings
 
@@ -470,14 +467,6 @@ Document every command you used in a file called `cleanup-log.txt` (use `echo "c
 **Discussion:** [Community thread on token savings](https://www.reddit.com/r/ClaudeAI/comments/1r2tt7q/i_saved_10m_tokens_89_on_my_claude_code_sessions/)
 
 
-**Claude Code npm 2.1.41 (latest)** (added 2026-02-13)
-@anthropic-ai/claude-code@2.1.41 published to...
-Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.41
-
-
-**Claude Code npm 2.1.42 (latest)** (added 2026-02-13)
-@anthropic-ai/claude-code@2.1.42 published to...
-Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.42
 
 
 #### Claude Code v2.1.43–2.1.49 Release Notes (Feb 13–19, 2026)
@@ -494,52 +483,16 @@ Several Claude Code releases shipped this week:
 > **Key takeaway:** v2.1.45 is the most significant — it adds Sonnet 4.6 model support and a new `spinnerTipsOverride` setting. Run `claude update` to get the latest.
 
 
-**Claude Code npm 2.1.76 (latest)** (added 2026-03-14)
-@anthropic-ai/claude-code@2.1.76 published to...
-Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.76
-
-
-**Claude Code npm 2.1.81 (latest)** (added 2026-03-20)
-@anthropic-ai/claude-code@2.1.81 published to...
-Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.81
 
 
 > **Deprecation Notice (2026-03-24):** Claude Code didn't replace me — it made my decade of experience ship faster. I've been doing DevOps and SRE work for years. I knew exactly what terminal I wanted to exist. I just couldn't build it alone in any reasonable... [Source](https://www.reddit.com/r/ClaudeAI)
 
 
-**Claude Code npm 2.1.87 (latest)** (added 2026-03-29)
-@anthropic-ai/claude-code@2.1.87 published to...
-Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.87
 
 
-**Claude Code npm 2.1.92 (latest)** (added 2026-04-04)
-@anthropic-ai/claude-code@2.1.92 published to...
-Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.92
 
 
-**Claude Code npm 2.1.104 (latest)** (added 2026-04-12)
-@anthropic-ai/claude-code@2.1.104 published to...
-Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.104
 
-
-**Claude Code npm 2.1.114 (latest)** (added 2026-04-17)
-@anthropic-ai/claude-code@2.1.114 published to...
-Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.114
-
-
-**Claude Code npm 2.1.120** (added 2026-04-24)
-@anthropic-ai/claude-code@2.1.120 published to...
-Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.120
-
-
-**Claude Code npm 2.1.128** (added 2026-05-04)
-@anthropic-ai/claude-code@2.1.128 published to...
-Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.128
-
-
-**Claude Code npm 2.1.138 (latest)** (added 2026-05-09)
-@anthropic-ai/claude-code@2.1.138 published to...
-Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.138
 
 
 ---
@@ -1288,24 +1241,28 @@ Test it by starting a new Claude session and asking: "What do you know about thi
 >
 > 5. Use `/compact` when your session is getting long and Claude starts to slow down, forget earlier context, or repeat itself. Check with `/context` — if usage is above 80%, it is time to compact.
 
-#### Current Model Lineup (February 2026)
+#### Current Model Lineup (June 2026)
 
 | Model | Released | Model ID | Best For |
 |-------|----------|----------|----------|
-| **Claude Opus 4.6** | Feb 2026 | `claude-opus-4-6` | Agentic coding, complex tool use, multi-step reasoning |
-| **Claude Sonnet 4.5** | Sep 2025 | `claude-sonnet-4-5-20250929` | Everyday coding, balanced speed/capability |
+| **Claude Fable 5** | Jun 2026 | `claude-fable-5` | Creative coding, frontier reasoning, novel problem-solving |
+| **Claude Opus 4.8** | May 2026 | `claude-opus-4-8` | Complex agentic coding, large refactors, multi-step reasoning |
+| **Claude Opus 4.7** | Apr 2026 | `claude-opus-4-7` | Coding, agents, vision, multi-step tasks |
+| **Claude Opus 4.6** | Feb 2026 | `claude-opus-4-6` | Agentic coding, tool use, deep reasoning |
+| **Claude Sonnet 4.6** | Feb 2026 | `claude-sonnet-4-6` | Everyday coding, balanced speed/capability |
 | **Claude Haiku 4.5** | Oct 2025 | `claude-haiku-4-5-20251001` | Quick tasks, high-volume operations, cost-sensitive workflows |
 
-- **Opus 4.6** leads across agentic coding, computer use, tool use, search, and finance benchmarks. Available in Claude Code since v2.1.32; fast mode enabled in v2.1.36.
-- **Sonnet 4.5** sets benchmark records in coding, reasoning, and computer use. The default workhorse model. Released alongside the **Claude Agent SDK** for building custom agents programmatically.
-- **Haiku 4.5** matches prior state-of-the-art coding with unprecedented speed and cost-efficiency. Used internally by Claude Code for fast subagent operations.
+- **Fable 5** is a Mythos-class model — Anthropic’s most capable publicly available model, exceeding all prior Claude models. It represents a new model family beyond the Opus/Sonnet/Haiku tiers.
+- **Opus 4.8** brings stronger performance across coding, agentic tasks, and professional work with improved consistency. Fast mode (`/fast`) is available on Opus 4.8, 4.7, and 4.6.
+- **Sonnet 4.6** delivers frontier performance at lower cost than Opus. The best choice for everyday Claude Code work.
+- **Haiku 4.5** is used internally by Claude Code for fast subagent operations. Best for rapid iteration and cost-sensitive workflows.
 
-**Key takeaway:** Switch models mid-session with `/model` or set `ANTHROPIC_MODEL`. Use Opus 4.6 for complex architecture, Sonnet 4.5 for everyday coding, Haiku 4.5 for rapid iteration. Fast mode (`/fast`) is available for Opus 4.6.
+**Key takeaway:** Switch models mid-session with `/model` or set `ANTHROPIC_MODEL`. The latest and most capable models are Fable 5 and the Claude 4.x family. Fast mode (`/fast`) gives Opus faster output without downgrading to a smaller model.
 
-**Exercise:** Run the same prompt with all three models and compare response time, token cost, and output quality. Identify which tasks are "Haiku-appropriate" vs those that need Sonnet or Opus.
+**Exercise:** Run the same prompt with Fable 5, Opus 4.8, and Sonnet 4.6. Compare response time, token cost, and output quality. Identify which tasks benefit from Fable’s extra capability vs where Sonnet is sufficient.
 
 **References:**
-- [Opus 4.6](https://www.anthropic.com/news/claude-opus-4-6) | [Sonnet 4.5](https://www.anthropic.com/news/claude-sonnet-4-5) | [Haiku 4.5](https://www.anthropic.com/news/claude-haiku-4-5)
+- [Fable 5](https://www.anthropic.com/news/claude-fable-5) | [Opus 4.8](https://www.anthropic.com/news/claude-opus-4-8) | [Opus 4.7](https://www.anthropic.com/news/claude-opus-4-7)
 - [Agent SDK docs](https://docs.anthropic.com/en/docs/agents/agent-sdk)
 
 #### Claude Code Feature Updates (Feb 2026)
@@ -1324,12 +1281,31 @@ On exit, Claude Code now shows a session resume hint so you can continue your co
 - Let Claude build up auto memories across a few sessions, then review what it stored in `~/.claude/`
 - Use the task management system on a multi-step project to track progress
 
-#### Community Tools: ClaudeDesk
+#### Claude Code Surfaces: Beyond the Terminal
 
-- **ClaudeDesk v4.4.0** — An open-source Electron desktop app wrapping the Claude Code CLI. Provides multi-session terminals, split views, and agent team visualization.
-- Features: full git workflow (status, staging, commits) without leaving the app, 233+ automated tests.
-- Useful as a GUI alternative when you prefer a desktop interface over the raw terminal.
-- **Reference:** https://github.com/anthropics/claudedesk
+Claude Code runs everywhere — not just the terminal. Every surface connects to the same engine, so your CLAUDE.md files, settings, and MCP servers work across all of them.
+
+| Surface | What It Is | When to Use |
+|---------|-----------|-------------|
+| **Terminal CLI** | The full-featured command-line interface | Daily development, scripting, CI/CD |
+| **Desktop App** | Standalone app (Mac/Windows) with visual diffs and multi-session | Reviewing diffs visually, running sessions side by side, scheduled tasks |
+| **Web App** | Browser-based at claude.ai/code, no local setup | Long-running tasks, working from any device, parallel sessions |
+| **VS Code / JetBrains** | IDE extensions with inline diffs and @-mentions | When you prefer staying in your editor |
+| **Chrome Extension** | Debug live web apps directly | Frontend debugging, inspecting live pages |
+
+**Cross-device workflows:**
+- **Remote Control** — Continue a terminal session from your phone or another device
+- **Teleport** — Start a task on the web or iOS, then pull it into your terminal with `claude --teleport`
+- **Dispatch** — Message a task from your phone and open the session it creates on your desktop
+- **Channels** — Push events from Telegram, Discord, or iMessage into a Claude Code session
+- **Slack** — Mention @Claude in Slack with a bug report and get a pull request back
+
+**Routines** — Cloud-scheduled recurring tasks that run on Anthropic’s infrastructure (no computer needed). Create from the web, Desktop app, or `/schedule` in the CLI. Use for daily PR reviews, overnight CI analysis, or weekly dependency audits.
+
+**Exercise:**
+- Try Claude Code in the Desktop app or at claude.ai/code
+- Start a session in the terminal, then continue it from another device using Remote Control
+- Create a Routine that runs a weekly task (e.g., dependency audit) without your computer being on
 
 #### Token Usage Awareness
 
@@ -1337,27 +1313,16 @@ On exit, Claude Code now shows a session resume hint so you can continue your co
 - Community reports suggest token consumption can spike significantly when using Opus 4.6 for design-heavy or test-heavy workflows.
 - **Tip:** Use Sonnet 4.5 or Haiku 4.5 for routine tasks, and reserve Opus 4.6 for complex architecture and multi-step reasoning where quality matters most.
 
-#### Claude Sonnet 4.6 (Released Feb 17, 2026)
+#### Choosing the Right Model
 
-Anthropic released **Claude Sonnet 4.6**, a new model delivering frontier performance across coding, agentic tasks, and professional work at scale. Key points for Claude Code users:
+With six models available, picking the right one matters for both quality and cost:
 
-- **Claude Code support:** Added in v2.1.45. You can select Sonnet 4.6 using `/model` or by setting it in your configuration.
-- **Performance:** Optimized for coding and agent workflows — faster and more capable than Sonnet 4.5 for most tasks.
-- **Model ID:** `claude-sonnet-4-6` — use this when building applications with the Anthropic API.
-- **When to use:** Sonnet 4.6 is ideal for everyday Claude Code work where you want strong performance with lower cost than Opus. It excels at code generation, debugging, and multi-step agent tasks.
+- **Fable 5** — Your most challenging tasks. Novel architecture, complex multi-system problems, creative solutions. Highest capability, highest cost.
+- **Opus 4.8/4.7/4.6** — Complex agentic coding, large refactors, multi-step reasoning. The workhorse for serious development. Fast mode (`/fast`) available.
+- **Sonnet 4.6** — Everyday coding: bug fixes, feature implementation, code review. Best balance of speed and capability.
+- **Haiku 4.5** — Rapid iteration, simple edits, high-volume operations. Used automatically by subagents.
 
-> **Try it:** Run `/model` in Claude Code and switch to Sonnet 4.6. Try a coding task you've done before and compare the output quality and speed.
-
-#### Claude Opus 4.6 (February 2026)
-
-Anthropic upgraded its most capable model to **Opus 4.6**, achieving industry-leading performance across agentic coding, computer use, tool use, search, and finance benchmarks.
-
-- **Model ID:** `claude-opus-4-6` — the default model for Claude Code when available.
-- **Strengths:** Best-in-class for complex, multi-step coding tasks, large refactors, and tasks requiring deep reasoning.
-- **Claude Code integration:** Claude Code automatically uses Opus 4.6 when your plan supports it. You can verify with `/model`.
-- **When to choose Opus vs Sonnet:** Use Opus 4.6 for complex architecture decisions, large-scale refactors, and tasks requiring extensive reasoning. Use Sonnet 4.6 for faster, everyday coding tasks where speed matters more than depth.
-
-> **Exercise:** Compare Opus 4.6 and Sonnet 4.6 on the same task — ask Claude Code to explain a complex function. Note differences in depth and speed.
+> **Exercise:** Try the same refactoring task with Sonnet 4.6 and Opus 4.8. Note the difference in planning depth, then try it with Fable 5 to see if it finds a fundamentally different approach.
 
 
 #### System Prompt Changes in v2.1.48–2.1.49
@@ -1367,7 +1332,13 @@ Recent Claude Code releases included significant system prompt updates:
 - **v2.1.48:** Removed 1,082 tokens from the system prompt, including the old MCP CLI instructions (replaced by native MCP integration).
 - **v2.1.49:** Added the `EnterWorktree` tool description (237 tokens) to the system prompt, enabling Claude to create git worktrees mid-session.
 
-> **Why this matters:** Claude Code's system prompt defines what tools and behaviors are available. Tracking these changes helps you understand what Claude can and can't do in each version.
+> **Why this matters:** Claude Code’s system prompt defines what tools and behaviors are available. Tracking these changes helps you understand what Claude can and can’t do in each version.
+
+#### New CLI Features (2026)
+
+- **`/cd` command** (v2.1.169) — Move a session to a new working directory without breaking the prompt cache. Useful when you need to switch projects mid-session.
+- **`--safe-mode`** (v2.1.169) — Disables all customizations (hooks, CLAUDE.md, MCP servers) for troubleshooting. Use when Claude Code behaves unexpectedly and you want to rule out configuration issues.
+- **`/schedule`** — Create cloud-based Routines directly from the CLI. Routines run on Anthropic’s infrastructure and keep working when your computer is off.
 
 
 #### Opencode: Claude Subscription Support Removed
@@ -1380,14 +1351,34 @@ Recent Claude Code releases included significant system prompt updates:
 > **Takeaway:** Third-party tools can change their integration support at any time. The official Claude Code CLI is the most reliable way to access Claude from the terminal.
 
 
-**Introducing Claude Opus 4.7** (added Apr 16, 20)
-Our latest Opus model brings stronger performance across coding, agents, vision, and multi-step tasks, with greater thoroughness and consistency on...
-Source: https://www.anthropic.com/news/claude-opus-4-7
+#### Claude Opus 4.7 (April 2026)
 
+Anthropic released **Opus 4.7** with stronger performance across coding, agents, vision, and multi-step tasks. Key improvements over 4.6:
 
-**Introducing Claude Opus 4.8** (added May 28, 20)
-An upgrade to our Opus class of models, with stronger performance across coding, agentic tasks, and professional work, and the consistency to handle...
-Source: https://www.anthropic.com/news/claude-opus-4-8
+- Greater thoroughness and consistency on complex, multi-file tasks
+- Improved vision capabilities for working with screenshots and diagrams
+- Better handling of long-context sessions
+- Model ID: `claude-opus-4-7`
+
+#### Claude Opus 4.8 (May 2026)
+
+**Opus 4.8** is the latest in the Opus family, with the strongest coding and agentic performance to date:
+
+- Improved consistency on professional work and complex reasoning
+- Better autonomous operation in long sessions
+- Fast mode (`/fast`) available — gives faster output without downgrading to a smaller model
+- Model ID: `claude-opus-4-8`
+
+#### Claude Fable 5 (June 2026)
+
+**Fable 5** is a Mythos-class model — a new model family that exceeds the capabilities of any previously available Claude model. This is not an incremental Opus/Sonnet update; it represents a generational leap.
+
+- Model ID: `claude-fable-5`
+- Available in Claude Code since v2.1.170
+- Excels at creative problem-solving, novel approaches, and frontier reasoning
+- Use `/model` to switch to Fable 5 for your most challenging tasks
+
+> **Exercise:** Switch to Fable 5 with `/model` and try a task that previously stumped Opus. Compare the approach and output quality.
 
 ---
 
@@ -3348,6 +3339,22 @@ Claude Code has 6 built-in subagent types:
 | **Claude Code Guide** | Default | Answer questions about Claude Code | No (read-only) |
 
 Claude automatically chooses which subagent to use based on the task. You can also explicitly request one: "Use an Explore agent to find all API endpoints in this project."
+
+**Sub-agent Nesting (v2.1.172+)**
+
+Sub-agents can now spawn their own sub-agents, up to **5 levels deep**. This enables complex hierarchical workflows where a coordinator agent delegates to specialists, who can further delegate subtasks:
+
+```
+Lead Agent
+  ├─ Frontend Agent
+  │    ├─ Component Agent (builds UI)
+  │    └─ Style Agent (CSS/Tailwind)
+  └─ Backend Agent
+       ├─ Schema Agent (database)
+       └─ API Agent (endpoints)
+```
+
+Each nested agent inherits its parent’s permission constraints. Use nesting for large projects where a single level of delegation isn’t granular enough.
 
 **Foreground vs Background Subagents**
 
