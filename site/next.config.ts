@@ -22,8 +22,23 @@ if (process.env.VERCEL) {
 }
 
 const nextConfig: NextConfig = {
+  // Disable Turbopack — it panics on this machine ("Failed to write app endpoint /page").
+  // Use --no-turbopack flag when running `next dev` instead.
+  // turbopack: false,
   async headers() {
     return [
+      // Next.js static assets have content-hashed filenames — safe to cache
+      // for 1 year with immutable (browser won't revalidate until URL changes).
+      {
+        source: "/_next/static/(.*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      // All other routes: security headers + HSTS
       {
         source: "/(.*)",
         headers: [
@@ -33,6 +48,15 @@ const nextConfig: NextConfig = {
           {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=()",
+          },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=31536000; includeSubDomains",
+          },
+          {
+            key: "Content-Security-Policy",
+            value:
+              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co https://api.lemonsqueezy.com https://va.vercel-scripts.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
           },
         ],
       },

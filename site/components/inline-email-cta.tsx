@@ -9,12 +9,14 @@ export function InlineEmailCta({ message }: { message: string }) {
   const [subscribed, setSubscribed] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [ready, setReady] = useState(false);
   const emailRef = useRef("");
 
   useEffect(() => {
     if (localStorage.getItem(SUBSCRIBED_KEY)) {
       setSubscribed(true);
     }
+    setReady(true);
   }, []);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -42,6 +44,9 @@ export function InlineEmailCta({ message }: { message: string }) {
       setSubmitting(false);
     }
   }
+
+  // Don't render anything until we've checked localStorage to prevent flash
+  if (!ready) return null;
 
   if (subscribed && !submitted) return null;
 

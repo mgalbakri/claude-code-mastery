@@ -57,8 +57,8 @@ grep -rn 'href="/' site/app/ site/components/ --include='*.tsx' | grep -v node_m
 ### 5. Curriculum Structure
 Check `curriculum.md`:
 ```bash
-WEEKS=$(grep -c '^## Week' curriculum.md)
-PHASES=$(grep -c '^# Phase' curriculum.md)
+WEEKS=$(grep -c '^### WEEK' curriculum.md)
+PHASES=$(grep -c '^## Phase' curriculum.md)
 ```
 - ✅ PASS if 12 weeks, 3 phases
 - ❌ FAIL if counts don't match

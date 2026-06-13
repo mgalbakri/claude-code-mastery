@@ -10,7 +10,9 @@ Storage: ~/.claude-code-mastery/docs_snapshots/
 import hashlib
 import json
 import logging
+import os
 import re
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
@@ -95,7 +97,7 @@ def _extract_sections(html: str) -> dict[str, str]:
     current_heading = "__intro__"
     current_parts: list[str] = []
 
-    for el in main.descendants:
+    for el in main.find_all(recursive=False):
         if el.name in ("h1", "h2", "h3", "h4"):
             # Save previous section
             text = " ".join(current_parts).strip()
@@ -199,10 +201,23 @@ async def snapshot_docs() -> dict:
     return snapshot
 
 
+def _atomic_write(path: Path, content: str):
+    """Write content to a file atomically via temp file + rename."""
+    fd, tmp = tempfile.mkstemp(dir=path.parent, suffix=".tmp")
+    try:
+        os.write(fd, content.encode())
+        os.close(fd)
+        os.replace(tmp, str(path))
+    except:
+        os.close(fd)
+        os.unlink(tmp)
+        raise
+
+
 def save_snapshot(snapshot: dict, label: str = "latest") -> Path:
-    """Persist a snapshot to disk."""
+    """Persist a snapshot to disk atomically."""
     path = _snapshot_path(label)
-    path.write_text(json.dumps(snapshot, indent=2), encoding="utf-8")
+    _atomic_write(path, json.dumps(snapshot, indent=2))
     logger.info("Saved docs snapshot to %s", path)
     return path
 
@@ -356,9 +371,12 @@ async def run_docs_diff() -> tuple[list[Update], str]:
     # Diff
     changes = diff_snapshots(old_snapshot, new_snapshot)
 
-    # Rotate: current latest → previous, new → latest
+    # Atomic rotation: write new to temp label, rotate old→previous, temp→latest
+    save_snapshot(new_snapshot, "incoming")
     save_snapshot(old_snapshot, "previous")
-    save_snapshot(new_snapshot, "latest")
+    incoming_path = _snapshot_path("incoming")
+    latest_path = _snapshot_path("latest")
+    os.replace(str(incoming_path), str(latest_path))
 
     if not changes:
         return [], "✅ No documentation changes detected since last snapshot."

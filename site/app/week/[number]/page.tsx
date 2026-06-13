@@ -9,6 +9,8 @@ import { PremiumGate } from "@/components/premium-gate";
 import { ContextualToolCta } from "@/components/contextual-tool-cta";
 import { ShareButtons } from "@/components/share-buttons";
 import { BreadcrumbJsonLd } from "@/components/breadcrumb-jsonld";
+import { getServerPremiumStatus } from "@/lib/supabase-server";
+import { FREE_WEEKS, COURSE_IS_FREE } from "@/lib/constants";
 
 interface WeekPageProps {
   params: Promise<{ number: string }>;
@@ -70,6 +72,12 @@ export default async function WeekPage({ params }: WeekPageProps) {
   const allWeeks = getAllWeeks();
   const prevWeek = allWeeks.find((w) => w.number === weekNum - 1);
   const nextWeek = allWeeks.find((w) => w.number === weekNum + 1);
+
+  // Server-side premium gate — check before rendering ANY protected content.
+  // Free weeks and COURSE_IS_FREE mode bypass this check entirely.
+  const isFreeWeek = (FREE_WEEKS as readonly number[]).includes(weekNum);
+  const userIsPremium =
+    COURSE_IS_FREE || isFreeWeek ? true : await getServerPremiumStatus();
 
   // LearningResource schema — safe: all data is from server-side static curriculum parsing, not user input
   const learningResourceSchema = JSON.stringify({
@@ -194,50 +202,56 @@ export default async function WeekPage({ params }: WeekPageProps) {
         </section>
       )}
 
-      {/* Premium-gated content (activities, skills, lessons) */}
-      <PremiumGate weekNumber={weekNum}>
-        {/* Activities */}
-        {week.activities.length > 0 && (
-          <section className="mb-8">
-            <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">
-              Activities
-            </h2>
-            <ul className="space-y-1.5">
-              {week.activities.map((activity, i) => (
-                <li
-                  key={i}
-                  className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-300"
-                >
-                  <span className="mt-0.5 w-1.5 h-1.5 rounded-full bg-blue-400 dark:bg-blue-600 flex-shrink-0" />
-                  {activity}
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
+      {/* Premium-gated content — children are ONLY passed when userIsPremium is
+          confirmed server-side. Non-premium users receive the paywall UI with
+          zero lesson content in the HTML (no CSS-only hiding). */}
+      <PremiumGate weekNumber={weekNum} serverPremium={userIsPremium}>
+        {userIsPremium ? (
+          <>
+            {/* Activities */}
+            {week.activities.length > 0 && (
+              <section className="mb-8">
+                <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">
+                  Activities
+                </h2>
+                <ul className="space-y-1.5">
+                  {week.activities.map((activity, i) => (
+                    <li
+                      key={i}
+                      className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-300"
+                    >
+                      <span className="mt-0.5 w-1.5 h-1.5 rounded-full bg-blue-400 dark:bg-blue-600 flex-shrink-0" />
+                      {activity}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
 
-        {/* Skills */}
-        {week.skills && (
-          <section className="mb-10">
-            <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">
-              Skills You&apos;ll Gain
-            </h2>
-            <p className="text-sm text-slate-700 dark:text-slate-300">
-              {week.skills}
-            </p>
-          </section>
-        )}
+            {/* Skills */}
+            {week.skills && (
+              <section className="mb-10">
+                <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">
+                  Skills You&apos;ll Gain
+                </h2>
+                <p className="text-sm text-slate-700 dark:text-slate-300">
+                  {week.skills}
+                </p>
+              </section>
+            )}
 
-        {/* Full Content (markdown) */}
-        {week.content && (
-          <section className="mb-12">
-            <hr className="border-slate-200 dark:border-slate-800 mb-8" />
-            <MarkdownRenderer content={week.content} />
-          </section>
-        )}
+            {/* Full Content (markdown) */}
+            {week.content && (
+              <section className="mb-12">
+                <hr className="border-slate-200 dark:border-slate-800 mb-8" />
+                <MarkdownRenderer content={week.content} />
+              </section>
+            )}
 
-        {/* Mark Complete */}
-        <WeekCompleteButton weekNumber={weekNum} />
+            {/* Mark Complete */}
+            <WeekCompleteButton weekNumber={weekNum} />
+          </>
+        ) : null}
       </PremiumGate>
 
       {/* Tool Recommendations */}

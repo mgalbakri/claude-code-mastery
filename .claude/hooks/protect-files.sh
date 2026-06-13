@@ -7,18 +7,18 @@ set -euo pipefail
 INPUT=$(cat)
 FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // .tool_input.command // ""')
 
-# Protected patterns
+# Protected patterns (anchored to avoid false positives like vendor-envelopes/)
 PROTECTED_PATTERNS=(
-  "\.env"
-  "\.env\.local"
-  "\.env\.production"
-  "credentials"
-  "secrets"
-  "\.git/"
-  "node_modules/"
-  "package-lock\.json"
-  "\.vercel/project\.json"
-  "\.claude/settings"
+  "(^|/)\.env($|\.|/)"
+  "(^|/)\.env\.local$"
+  "(^|/)\.env\.production$"
+  "(^|/)credentials($|/)"
+  "(^|/)secrets($|/)"
+  "(^|/)\.git/"
+  "(^|/)node_modules/"
+  "(^|/)package-lock\.json$"
+  "\.vercel/project\.json$"
+  "(^|/)\.claude/settings(\.|$)"
 )
 
 for pattern in "${PROTECTED_PATTERNS[@]}"; do

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { Phase, Appendix } from "@/lib/types";
@@ -18,9 +18,49 @@ export function MobileNav({ phases, appendices }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const { completedWeeks } = useProgress();
+  const navContainerRef = useRef<HTMLDivElement>(null);
+
+  // Escape key handler
+  useEffect(() => {
+    if (!open) return;
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
+
+  // Focus trap: focus first link on open, wrap Tab on last item
+  useEffect(() => {
+    if (!open || !navContainerRef.current) return;
+    const container = navContainerRef.current;
+    const focusableLinks = container.querySelectorAll<HTMLElement>("a, button");
+    if (focusableLinks.length > 0) {
+      focusableLinks[0].focus();
+    }
+
+    function handleTabTrap(e: KeyboardEvent) {
+      if (e.key !== "Tab" || !container) return;
+      const items = container.querySelectorAll<HTMLElement>("a, button");
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+    document.addEventListener("keydown", handleTabTrap);
+    return () => document.removeEventListener("keydown", handleTabTrap);
+  }, [open]);
 
   return (
-    <div className="lg:hidden">
+    <nav className="lg:hidden" aria-label="Mobile navigation">
       <button
         onClick={() => setOpen(!open)}
         className="p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
@@ -38,7 +78,12 @@ export function MobileNav({ phases, appendices }: MobileNavProps) {
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 right-0 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 shadow-lg z-50 max-h-[70vh] overflow-y-auto p-4">
+        <div
+          ref={navContainerRef}
+          role="dialog"
+          aria-modal="true"
+          className="absolute top-full left-0 right-0 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 shadow-lg z-50 max-h-[70vh] overflow-y-auto p-4"
+        >
           {phases.map((phase) => (
             <div key={phase.number} className="mb-4">
               <div className="text-xs font-semibold uppercase tracking-wider mb-1 text-slate-500">
@@ -91,6 +136,6 @@ export function MobileNav({ phases, appendices }: MobileNavProps) {
           <UpgradeCta />
         </div>
       )}
-    </div>
+    </nav>
   );
 }

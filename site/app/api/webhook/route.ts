@@ -4,10 +4,13 @@ import { createClient } from "@supabase/supabase-js";
 import { sendPurchaseConfirmation } from "@/lib/email";
 
 function getSupabaseAdmin() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!serviceRoleKey) {
+    throw new Error(
+      "SUPABASE_SERVICE_ROLE_KEY is required for webhook processing"
+    );
+  }
+  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceRoleKey);
 }
 
 function verifySignature(body: string, signature: string | null): boolean {
@@ -36,40 +39,71 @@ export async function POST(request: Request) {
     const orderId: string = payload.data?.id;
     const email: string = attrs?.user_email;
     const status: string = attrs?.status;
-    const userId: string | undefined = attrs?.custom_data?.user_id;
+    let userId: string | undefined = attrs?.custom_data?.user_id;
     const totalFormatted: string = attrs?.total_formatted || "$49.00";
 
     console.log(
       `Payment received: ${email} (user: ${userId || "anonymous"}, order: ${orderId}, status: ${status})`
     );
 
-    // If we have a userId, mark them as premium in Supabase
-    if (userId && status === "paid") {
-      const { error } = await getSupabaseAdmin()
-        .from("profiles")
-        .update({
-          is_premium: true,
-          order_id: orderId,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", userId);
+    if (status === "paid") {
+      const supabase = getSupabaseAdmin();
 
-      if (error) {
-        console.error("Failed to update profile:", error);
+      // If no userId from custom_data, try to find user by email (guest purchaser)
+      if (!userId && email) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("id")
+          .eq("email", email)
+          .single();
+
+        if (profile) {
+          userId = profile.id;
+          console.log(`Guest purchaser matched to profile by email: ${userId}`);
+        }
       }
-    }
 
-    // Send purchase confirmation email
-    if (email && status === "paid") {
-      try {
-        await sendPurchaseConfirmation({
-          to: email,
-          orderId,
-          amount: totalFormatted,
-        });
-      } catch (emailError) {
-        // Log but don't fail the webhook — payment is already processed
-        console.error("Email send failed (non-fatal):", emailError);
+      if (userId) {
+        // Idempotency: check if this order was already processed
+        const { data: existing } = await supabase
+          .from("profiles")
+          .select("order_id")
+          .eq("id", userId)
+          .single();
+
+        if (existing?.order_id === orderId) {
+          console.log(
+            `Order ${orderId} already processed for user ${userId}, skipping`
+          );
+          return NextResponse.json({ received: true });
+        }
+
+        const { error } = await supabase
+          .from("profiles")
+          .update({
+            is_premium: true,
+            order_id: orderId,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", userId);
+
+        if (error) {
+          console.error("Failed to update profile:", error);
+        }
+      }
+
+      // Send purchase confirmation email (skip if idempotency check passed above)
+      if (email) {
+        try {
+          await sendPurchaseConfirmation({
+            to: email,
+            orderId,
+            amount: totalFormatted,
+          });
+        } catch (emailError) {
+          // Log but don't fail the webhook — payment is already processed
+          console.error("Email send failed (non-fatal):", emailError);
+        }
       }
     }
   }

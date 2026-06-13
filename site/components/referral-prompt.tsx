@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { getReferralUrl } from "@/lib/referral";
 
 interface ReferralPromptProps {
@@ -12,12 +12,22 @@ interface ReferralPromptProps {
 export function ReferralPrompt({ email, variant = "full" }: ReferralPromptProps) {
   const [copied, setCopied] = useState(false);
   const referralUrl = getReferralUrl(email);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, []);
 
   async function copyLink() {
     try {
       await navigator.clipboard.writeText(referralUrl);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => setCopied(false), 2000);
     } catch {
       // Fallback for older browsers
       const input = document.createElement("input");
@@ -27,7 +37,8 @@ export function ReferralPrompt({ email, variant = "full" }: ReferralPromptProps)
       document.execCommand("copy");
       document.body.removeChild(input);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => setCopied(false), 2000);
     }
   }
 

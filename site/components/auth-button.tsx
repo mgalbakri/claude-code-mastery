@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 
@@ -9,7 +9,9 @@ export function AuthButton() {
     useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
   const [showSignIn, setShowSignIn] = useState(false);
+  const [focusedIndex, setFocusedIndex] = useState(-1);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const menuItemsRef = useRef<(HTMLElement | null)[]>([]);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -19,11 +21,61 @@ export function AuthButton() {
       ) {
         setShowDropdown(false);
         setShowSignIn(false);
+        setFocusedIndex(-1);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Focus first menu item when dropdown opens
+  useEffect(() => {
+    if (showDropdown) {
+      setFocusedIndex(0);
+      // Wait for DOM to render before focusing
+      requestAnimationFrame(() => {
+        menuItemsRef.current[0]?.focus();
+      });
+    } else {
+      setFocusedIndex(-1);
+    }
+  }, [showDropdown]);
+
+  const handleMenuKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      const items = menuItemsRef.current.filter(Boolean) as HTMLElement[];
+      const count = items.length;
+      if (count === 0) return;
+
+      switch (e.key) {
+        case "ArrowDown": {
+          e.preventDefault();
+          const next = (focusedIndex + 1) % count;
+          setFocusedIndex(next);
+          items[next]?.focus();
+          break;
+        }
+        case "ArrowUp": {
+          e.preventDefault();
+          const prev = (focusedIndex - 1 + count) % count;
+          setFocusedIndex(prev);
+          items[prev]?.focus();
+          break;
+        }
+        case "Escape":
+          e.preventDefault();
+          setShowDropdown(false);
+          setFocusedIndex(-1);
+          break;
+        case "Enter": {
+          e.preventDefault();
+          items[focusedIndex]?.click();
+          break;
+        }
+      }
+    },
+    [focusedIndex]
+  );
 
   if (isLoading) {
     return (
@@ -47,6 +99,7 @@ export function AuthButton() {
           onClick={() => setShowDropdown(!showDropdown)}
           className="flex items-center gap-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
           aria-label="User menu"
+          aria-expanded={showDropdown}
         >
           {avatarUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -63,7 +116,11 @@ export function AuthButton() {
         </button>
 
         {showDropdown && (
-          <div className="absolute right-0 mt-2 w-56 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/50 shadow-xl z-50 py-1">
+          <div
+            role="menu"
+            onKeyDown={handleMenuKeyDown}
+            className="absolute right-0 mt-2 w-56 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/50 shadow-xl z-50 py-1"
+          >
             <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">
               <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
                 {displayName}
@@ -73,13 +130,19 @@ export function AuthButton() {
               </p>
             </div>
             <Link
+              ref={(el) => { menuItemsRef.current[0] = el; }}
               href="/profile"
+              role="menuitem"
+              tabIndex={focusedIndex === 0 ? 0 : -1}
               onClick={() => setShowDropdown(false)}
               className="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
             >
               Profile & Progress
             </Link>
             <button
+              ref={(el) => { menuItemsRef.current[1] = el; }}
+              role="menuitem"
+              tabIndex={focusedIndex === 1 ? 0 : -1}
               onClick={() => {
                 signOut();
                 setShowDropdown(false);

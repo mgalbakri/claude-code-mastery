@@ -16,6 +16,7 @@ Key entry points
 - ``SemanticIndex.build(curriculum_text)`` — build reusable index
 """
 
+import asyncio
 import logging
 import re
 from typing import Optional
@@ -242,6 +243,7 @@ class SemanticIndex:
 # --- Convenience functions ---
 
 _global_index: Optional[SemanticIndex] = None
+_index_lock = asyncio.Lock()
 
 
 def build_index(curriculum_text: str, topic_map: Optional[dict] = None) -> SemanticIndex:
@@ -251,6 +253,21 @@ def build_index(curriculum_text: str, topic_map: Optional[dict] = None) -> Seman
     idx.build(curriculum_text, topic_map)
     _global_index = idx
     return idx
+
+
+def _ensure_global_index(curriculum_text: str) -> None:
+    """Build the global index if it hasn't been built yet (non-async helper)."""
+    global _global_index
+    if _global_index is None or not _global_index._built:
+        build_index(curriculum_text)
+
+
+async def ensure_global_index_async(curriculum_text: str) -> None:
+    """Build the global index under a lock to prevent redundant concurrent rebuilds."""
+    global _global_index
+    async with _index_lock:
+        if _global_index is None or not _global_index._built:
+            build_index(curriculum_text)
 
 
 def is_semantically_covered(
@@ -269,14 +286,11 @@ def is_semantically_covered(
         threshold: Similarity threshold (0-1). Higher = stricter matching.
         index: Optional pre-built index (avoids rebuilding per call)
     """
-    global _global_index
-
     if index:
         return index.is_covered(update_text, threshold=threshold)
 
     # Build or reuse global index
-    if _global_index is None or not _global_index._built:
-        build_index(curriculum_text)
+    _ensure_global_index(curriculum_text)
 
     if _global_index and _global_index._built:
         return _global_index.is_covered(update_text, threshold=threshold)
@@ -294,13 +308,10 @@ def find_best_week(
 
     Returns week number or None if no good match.
     """
-    global _global_index
-
     if index:
         return index.best_week(update_text)
 
-    if _global_index is None or not _global_index._built:
-        build_index(curriculum_text)
+    _ensure_global_index(curriculum_text)
 
     if _global_index and _global_index._built:
         return _global_index.best_week(update_text)

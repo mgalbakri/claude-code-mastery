@@ -2,12 +2,27 @@
 
 import json
 import logging
+import os
 import shutil
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
 logger = logging.getLogger(__name__)
+
+
+def _atomic_write(path: Path, content: str):
+    """Write content to a file atomically via temp file + rename."""
+    fd, tmp = tempfile.mkstemp(dir=path.parent, suffix=".tmp")
+    try:
+        os.write(fd, content.encode())
+        os.close(fd)
+        os.replace(tmp, str(path))
+    except:
+        os.close(fd)
+        os.unlink(tmp)
+        raise
 
 
 DEFAULT_CACHE_DIR = Path.home() / ".claude-code-mastery"
@@ -63,7 +78,7 @@ def save_cache(cache: dict) -> None:
         **cache,
         "seen_updates": sorted(cache["seen_updates"]),
     }
-    cache_file.write_text(json.dumps(serializable, indent=2), encoding="utf-8")
+    _atomic_write(cache_file, json.dumps(serializable, indent=2))
 
 
 def mark_update_seen(update_key: str) -> None:
@@ -149,7 +164,7 @@ def save_curriculum_state(state: dict) -> None:
     global _state_instance
     _state_instance = state
     state_file = get_cache_dir() / CURRICULUM_STATE_FILE
-    state_file.write_text(json.dumps(state, indent=2), encoding="utf-8")
+    _atomic_write(state_file, json.dumps(state, indent=2))
 
 
 MAX_BACKUPS = 10

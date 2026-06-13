@@ -206,9 +206,13 @@ async def fetch_anthropic_changelog(days_back: int = 30) -> list[Update]:
     """Fetch recent entries from Anthropic's changelog."""
     updates = []
 
-    async with httpx.AsyncClient(timeout=15.0, follow_redirects=True) as client:
-        response = await client.get(ANTHROPIC_CHANGELOG_URL, headers=HEADERS)
-        response.raise_for_status()
+    try:
+        async with httpx.AsyncClient(timeout=15.0, follow_redirects=True) as client:
+            response = await client.get(ANTHROPIC_CHANGELOG_URL, headers=HEADERS)
+            response.raise_for_status()
+    except httpx.HTTPError as e:
+        logger.warning("Anthropic Changelog fetch failed: %s", e)
+        return []
 
     soup = BeautifulSoup(response.text, "html.parser")
 
@@ -258,9 +262,13 @@ async def fetch_claude_code_docs() -> list[Update]:
     """Fetch current Claude Code documentation structure for gap analysis."""
     updates = []
 
-    async with httpx.AsyncClient(timeout=15.0, follow_redirects=True) as client:
-        response = await client.get(CLAUDE_CODE_DOCS_URL, headers=HEADERS)
-        response.raise_for_status()
+    try:
+        async with httpx.AsyncClient(timeout=15.0, follow_redirects=True) as client:
+            response = await client.get(CLAUDE_CODE_DOCS_URL, headers=HEADERS)
+            response.raise_for_status()
+    except httpx.HTTPError as e:
+        logger.warning("Claude Code Docs fetch failed: %s", e)
+        return []
 
     soup = BeautifulSoup(response.text, "html.parser")
 

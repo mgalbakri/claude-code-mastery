@@ -779,18 +779,30 @@ def apply_single_update(curriculum_content: str, update: CurriculumUpdate) -> st
                 f"Use action='append' instead."
             )
 
+        # Find the heading line that contains the section title and extract
+        # the heading prefix (e.g. "### ", "## ") so it is preserved.
+        heading_prefix = ""
+        line_start = curriculum_content.rfind("\n", 0, section_idx)
+        line_start = 0 if line_start == -1 else line_start + 1
+        heading_line = curriculum_content[line_start:section_idx + len(update.section)]
+        heading_match = re.match(r'^(#{1,3}\s+)', heading_line)
+        if heading_match:
+            heading_prefix = heading_match.group(1)
+
+        replacement_block = f"\n\n{heading_prefix}{update.content}\n"
+
         next_header = re.compile(r'^#{1,3}\s+', re.MULTILINE)
         search_start = section_idx + len(update.section)
         next_match = next_header.search(curriculum_content, search_start)
 
         if next_match:
             return (
-                curriculum_content[:section_idx]
-                + update_block + "\n"
+                curriculum_content[:line_start]
+                + replacement_block + "\n"
                 + curriculum_content[next_match.start():]
             )
         else:
-            return curriculum_content[:section_idx] + update_block
+            return curriculum_content[:line_start] + replacement_block
 
     else:
         raise ValueError(f"Invalid action '{update.action}'. Use 'append', 'replace', or 'new'.")
