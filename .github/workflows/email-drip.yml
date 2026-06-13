@@ -1,0 +1,35 @@
+name: Daily Email Drip
+
+on:
+  schedule:
+    - cron: "0 14 * * *" # 2 PM UTC daily (morning in US)
+  workflow_dispatch: {}
+
+jobs:
+  send-drip:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Trigger drip processing
+        env:
+          DRIP_SECRET: ${{ secrets.DRIP_SECRET }}
+          SITE_URL: ${{ vars.SITE_URL || 'https://agentcodeacademy.com' }}
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            -H "Authorization: Bearer ${DRIP_SECRET}" \
+            "${SITE_URL}/api/drip")
+
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | head -1)
+
+          echo "Status: ${http_code}"
+          echo "Response: ${body}"
+
+          if [ "$http_code" != "200" ]; then
+            echo "::error::Drip endpoint returned ${http_code}"
+            exit 1
+          fi
+
+      - name: Summary
+        if: always()
+        run: echo "Drip processing complete" >> "$GITHUB_STEP_SUMMARY"

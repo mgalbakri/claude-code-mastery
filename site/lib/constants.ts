@@ -17,6 +17,8 @@ export const COURSE_IS_FREE = false;
 // Pricing (dormant while COURSE_IS_FREE)
 export const PRICE_AMOUNT = 4900; // cents
 export const PRICE_DISPLAY = "$49";
+export const ORIGINAL_PRICE_DISPLAY = "$99";
+export const LAUNCH_PRICING = true;
 
 // Lead magnet
 export const CHEAT_SHEET_PATH = "/ai-coding-cheat-sheet.pdf";

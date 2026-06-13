@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { DRIP_SEQUENCE } from "@/lib/email-templates";
 
 let _resend: Resend | null = null;
 function getResend(): Resend {
@@ -73,6 +74,21 @@ export async function POST(request: Request) {
         { error: "Subscription failed. Please try again." },
         { status: 500 }
       );
+    }
+
+    // Send welcome email with cheat sheet immediately
+    const welcome = DRIP_SEQUENCE[0];
+    const emailFrom = process.env.EMAIL_FROM || "Agent Code Academy <hello@agentcodeacademy.com>";
+    try {
+      await resend.emails.send({
+        from: emailFrom,
+        to: normalizedEmail,
+        subject: welcome.subject,
+        html: welcome.html,
+        headers: { "X-Entity-Ref-ID": `drip-${welcome.id}-${normalizedEmail}` },
+      });
+    } catch (emailErr) {
+      console.error("Welcome email failed:", emailErr);
     }
 
     return NextResponse.json({ ok: true });
