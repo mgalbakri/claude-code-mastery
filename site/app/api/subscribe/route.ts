@@ -11,11 +11,20 @@ function getResend(): Resend {
   return _resend;
 }
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const EMAIL_MAX_LENGTH = 254;
+const REFERRER_MAX_LENGTH = 64;
+
 export async function POST(request: Request) {
   try {
     const { email, referrer } = await request.json();
 
-    if (!email || typeof email !== "string" || !email.includes("@")) {
+    if (
+      !email ||
+      typeof email !== "string" ||
+      email.length > EMAIL_MAX_LENGTH ||
+      !EMAIL_REGEX.test(email)
+    ) {
       return NextResponse.json(
         { error: "A valid email address is required" },
         { status: 400 }
@@ -47,7 +56,12 @@ export async function POST(request: Request) {
     };
 
     // Store referrer in firstName field as metadata (Resend doesn't have custom fields)
-    if (referrer && typeof referrer === "string" && referrer.length >= 4) {
+    if (
+      referrer &&
+      typeof referrer === "string" &&
+      referrer.length >= 4 &&
+      referrer.length <= REFERRER_MAX_LENGTH
+    ) {
       contactData.firstName = `ref:${referrer}`;
     }
 
@@ -56,7 +70,7 @@ export async function POST(request: Request) {
     if (resendError) {
       console.error("Resend contact creation failed:", JSON.stringify(resendError));
       return NextResponse.json(
-        { error: "Subscription failed. Please try again.", detail: resendError.message },
+        { error: "Subscription failed. Please try again." },
         { status: 500 }
       );
     }

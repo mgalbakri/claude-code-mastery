@@ -1,8 +1,10 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 import { useProgress } from "@/lib/progress-context";
+import { supabase } from "@/lib/supabase";
 import { Lock, FileText } from "lucide-react";
 import { Certificate } from "@/components/certificate";
 import { TOTAL_WEEKS } from "@/lib/constants";
@@ -30,6 +32,28 @@ function formatDate(date: Date): string {
 export function CertificateClient() {
   const { user, profile, isLoading: authLoading } = useAuth();
   const { completedWeeks, isLoading: progressLoading } = useProgress();
+  const [lastCompletionDate, setLastCompletionDate] = useState<Date | null>(null);
+
+  // Try to fetch the actual completion date (latest progress row timestamp)
+  useEffect(() => {
+    if (!user || completedWeeks.length < TOTAL_WEEKS) return;
+    async function fetchCompletionDate() {
+      try {
+        const { data } = await supabase
+          .from("progress")
+          .select("created_at")
+          .eq("user_id", user!.id)
+          .order("created_at", { ascending: false })
+          .limit(1);
+        if (data && data.length > 0 && data[0].created_at) {
+          setLastCompletionDate(new Date(data[0].created_at));
+        }
+      } catch {
+        // Supabase may not have created_at — fall back to today
+      }
+    }
+    fetchCompletionDate();
+  }, [user, completedWeeks.length]);
 
   if (authLoading || progressLoading) {
     return (
@@ -98,7 +122,7 @@ export function CertificateClient() {
     user.email?.split("@")[0] ||
     "Learner";
   const certificateId = generateCertificateId(user.id);
-  const completionDate = formatDate(new Date());
+  const completionDate = formatDate(lastCompletionDate ?? new Date());
 
   function handlePrint() {
     window.print();

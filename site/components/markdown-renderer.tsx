@@ -5,6 +5,11 @@ import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import type { Components } from "react-markdown";
 
+import type { PluggableList } from "unified";
+
+const remarkPluginList: PluggableList = [remarkGfm];
+const rehypePluginList: PluggableList = [rehypeHighlight];
+
 interface MarkdownRendererProps {
   content: string;
 }
@@ -100,8 +105,8 @@ const components: Components = {
 export function MarkdownRenderer({ content }: MarkdownRendererProps) {
   return (
     <ReactMarkdown
-      remarkPlugins={[remarkGfm]}
-      rehypePlugins={[rehypeHighlight]}
+      remarkPlugins={remarkPluginList}
+      rehypePlugins={rehypePluginList}
       components={components}
     >
       {content}

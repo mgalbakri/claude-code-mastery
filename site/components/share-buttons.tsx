@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 interface ShareButtonsProps {
   url: string;
@@ -10,8 +10,18 @@ interface ShareButtonsProps {
 
 export function ShareButtons({ url, title, text }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const fullUrl = `https://agentcodeacademy.com${url}`;
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, []);
+
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  const fullUrl = `${origin}${url}`;
   const shareText =
     text || `${title} — free AI coding course at Agent Code Academy`;
 
@@ -21,7 +31,10 @@ export function ShareButtons({ url, title, text }: ShareButtonsProps) {
   function handleCopy() {
     navigator.clipboard.writeText(fullUrl).then(() => {
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+      timerRef.current = setTimeout(() => setCopied(false), 2000);
     });
   }
 

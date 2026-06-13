@@ -7,6 +7,8 @@
 #           next 20 lines. Any non-blank content between that --- and the
 #           heading is orphaned and should not exist.
 
+set -euo pipefail
+
 INPUT=$(cat)
 FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // .tool_input.path // ""')
 

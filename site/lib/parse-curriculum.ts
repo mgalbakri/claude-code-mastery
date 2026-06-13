@@ -43,8 +43,14 @@ function readCurriculum(): string {
  *     #### Sub-sections (updates, exercises, references)
  *   ## Appendices
  *   ### Appendix X: Title
+ *
+ * Result is cached at module level — curriculum.md is 177KB and only
+ * changes at deploy time, so there is no need to re-parse on every request.
  */
+let _cache: CurriculumData | null = null;
+
 export function parseCurriculum(): CurriculumData {
+  if (_cache) return _cache;
   const raw = readCurriculum();
   const lines = raw.split("\n");
 
@@ -115,7 +121,8 @@ export function parseCurriculum(): CurriculumData {
     }
   }
 
-  return data;
+  _cache = data;
+  return _cache;
 }
 
 function splitByH2(content: string): string[] {

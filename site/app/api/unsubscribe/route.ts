@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import crypto from "crypto";
 
 let _resend: Resend | null = null;
 function getResend(): Resend {
@@ -11,15 +12,62 @@ function getResend(): Resend {
   return _resend;
 }
 
+function getUnsubscribeSecret(): string {
+  const secret =
+    process.env.UNSUBSCRIBE_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!secret) {
+    throw new Error("No unsubscribe signing secret configured");
+  }
+  return secret;
+}
+
+/**
+ * Generate an HMAC-SHA256 token for unsubscribe links.
+ * Algorithm: HMAC-SHA256(email_lowercase, secret) → hex
+ *
+ * Usage in newsletter email links:
+ *   /api/unsubscribe?email=user@example.com&token=<hex>
+ *
+ * To generate from Python (newsletter.py):
+ *   import hmac, hashlib
+ *   token = hmac.new(secret.encode(), email.lower().encode(), hashlib.sha256).hexdigest()
+ */
+export function generateUnsubscribeToken(email: string): string {
+  return crypto
+    .createHmac("sha256", getUnsubscribeSecret())
+    .update(email.toLowerCase())
+    .digest("hex");
+}
+
+function verifyUnsubscribeToken(email: string, token: string): boolean {
+  const expected = generateUnsubscribeToken(email);
+  const expectedBuf = Buffer.from(expected);
+  const tokenBuf = Buffer.from(token);
+  if (expectedBuf.length !== tokenBuf.length) return false;
+  return crypto.timingSafeEqual(expectedBuf, tokenBuf);
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const email = searchParams.get("email");
+  const token = searchParams.get("token");
 
   if (!email) {
     return new NextResponse(unsubscribePage("Missing email parameter."), {
       status: 400,
       headers: { "Content-Type": "text/html" },
     });
+  }
+
+  // Require a valid HMAC token to prevent unauthorized unsubscribes
+  if (!token || !verifyUnsubscribeToken(email, token)) {
+    return new NextResponse(
+      unsubscribePage("Invalid or missing unsubscribe token."),
+      {
+        status: 403,
+        headers: { "Content-Type": "text/html" },
+      }
+    );
   }
 
   try {

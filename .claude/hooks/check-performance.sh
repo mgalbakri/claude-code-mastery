@@ -13,9 +13,14 @@ case "$FILE_PATH" in
   *) exit 0 ;;
 esac
 
-# Use a temp file to track edit count for this session
-# PID-based so it resets when Claude restarts
-COUNTER_FILE="/tmp/claude-perf-edits-${PPID:-0}"
+# Use a temp file to track edit count for this session.
+# Prefer CLAUDE_SESSION_ID for stability; fall back to a hash of project dir + date.
+if [[ -n "${CLAUDE_SESSION_ID:-}" ]]; then
+  SESSION_KEY="$CLAUDE_SESSION_ID"
+else
+  SESSION_KEY=$(echo "${CLAUDE_PROJECT_DIR:-unknown}-$(date +%Y-%m-%d)" | shasum -a 256 | cut -c1-12)
+fi
+COUNTER_FILE="/tmp/claude-perf-edits-${SESSION_KEY}"
 
 # Read current count
 COUNT=0

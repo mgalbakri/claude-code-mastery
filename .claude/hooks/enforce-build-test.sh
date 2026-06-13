@@ -23,11 +23,7 @@ if [[ ! -f "$BUILD_ID" ]]; then
 fi
 
 # Check build freshness (< 10 minutes old)
-if [[ "$(uname)" == "Darwin" ]]; then
-  FRESH=$(find "$SITE_DIR/.next" -maxdepth 1 -name "BUILD_ID" -mmin -10 2>/dev/null | head -1)
-else
-  FRESH=$(find "$SITE_DIR/.next" -maxdepth 1 -name "BUILD_ID" -mmin -10 2>/dev/null | head -1)
-fi
+FRESH=$(find "$SITE_DIR/.next" -maxdepth 1 -name "BUILD_ID" -mmin -10 2>/dev/null | head -1)
 
 if [[ -z "$FRESH" ]]; then
   echo "BLOCKED: Build is stale (>10 min old). Run 'cd site && npm run build' before pushing." >&2

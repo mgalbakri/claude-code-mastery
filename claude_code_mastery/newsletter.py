@@ -20,6 +20,7 @@ from typing import Optional
 
 import httpx
 from jinja2 import Environment, FileSystemLoader
+from urllib.parse import quote
 
 from .cache import get_cache_dir
 from .sources import Update, fetch_all_updates
@@ -377,15 +378,17 @@ async def render_pdf(html_content: str, output_path: str) -> str:
 
     async with async_playwright() as p:
         browser = await p.chromium.launch()
-        page = await browser.new_page(viewport={"width": 612, "height": 792})
-        await page.set_content(html_content, wait_until="networkidle")
-        await page.pdf(
-            path=output_path,
-            format="Letter",
-            print_background=True,
-            margin={"top": "0", "bottom": "0", "left": "0", "right": "0"},
-        )
-        await browser.close()
+        try:
+            page = await browser.new_page(viewport={"width": 612, "height": 792})
+            await page.set_content(html_content, wait_until="networkidle")
+            await page.pdf(
+                path=output_path,
+                format="Letter",
+                print_background=True,
+                margin={"top": "0", "bottom": "0", "left": "0", "right": "0"},
+            )
+        finally:
+            await browser.close()
 
     logger.info("PDF rendered: %s", output_path)
     return output_path
@@ -425,7 +428,10 @@ async def send_newsletter(
     if not config.resend_api_key:
         return {"success": False, "error": "No Resend API key configured"}
 
-    # Read the PDF
+    # Read the PDF (guard against missing path)
+    if not issue.pdf_path or not Path(issue.pdf_path).exists():
+        return {"success": False, "error": f"PDF not found: {issue.pdf_path!r}"}
+
     pdf_bytes = Path(issue.pdf_path).read_bytes()
     pdf_b64 = base64.b64encode(pdf_bytes).decode()
 
@@ -466,7 +472,7 @@ async def send_newsletter(
                     "subject": subject,
                     "html": issue.html_content.replace(
                         f"{SITE_URL}/api/unsubscribe",
-                        f"{SITE_URL}/api/unsubscribe?email={recipient}",
+                        f"{SITE_URL}/api/unsubscribe?email={quote(recipient, safe='')}",
                     ),
                     "attachments": [attachment],
                 }

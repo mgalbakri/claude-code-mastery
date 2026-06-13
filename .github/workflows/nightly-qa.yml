@@ -52,7 +52,7 @@ jobs:
 
       - name: API health check (fast-fail)
         run: |
-          STATUS=$(curl -s -o /tmp/health.json -w "%{http_code}" https://agentcodeacademy.com/api/health?verbose=true)
+          STATUS=$(curl -s --max-time 30 --connect-timeout 10 -o /tmp/health.json -w "%{http_code}" https://agentcodeacademy.com/api/health?verbose=true)
           cat /tmp/health.json | jq .
           if [ "$STATUS" != "200" ]; then
             echo "::error::Health check failed with HTTP $STATUS"

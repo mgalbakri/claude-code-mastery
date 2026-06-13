@@ -29,6 +29,9 @@ jobs:
       - name: Install Playwright browsers
         run: playwright install chromium --with-deps
 
+      - name: Clean output directory
+        run: rm -rf /tmp/newsletter-output && mkdir -p /tmp/newsletter-output
+
       - name: Run newsletter pipeline
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
@@ -53,7 +56,17 @@ jobs:
         if: success()
         run: |
           mkdir -p site/public/newsletter
-          cp /tmp/newsletter-output/issue-*.html site/public/newsletter/ 2>/dev/null || true
+          cp /tmp/newsletter-output/issue-*.html site/public/newsletter/
+
+      - name: Validate newsletter output
+        if: success()
+        run: |
+          if ! ls site/public/newsletter/issue-*.html 1>/dev/null 2>&1; then
+            echo "::error::No issue-*.html files found in output directory"
+            exit 1
+          fi
+          echo "Found newsletter files:"
+          ls -la site/public/newsletter/issue-*.html
 
       - name: Deploy site with newsletter archive
         if: success()

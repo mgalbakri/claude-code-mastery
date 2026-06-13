@@ -11,6 +11,7 @@ export function ExitIntentPopup() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const emailRef = useRef("");
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   const handleMouseLeave = useCallback((e: MouseEvent) => {
     // Only trigger when cursor leaves the top of the viewport
@@ -35,6 +36,19 @@ export function ExitIntentPopup() {
       document.documentElement.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, [handleMouseLeave]);
+
+  // Escape key handler + focus close button on open
+  useEffect(() => {
+    if (!visible) return;
+    closeButtonRef.current?.focus();
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        dismiss();
+      }
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [visible]);
 
   function dismiss() {
     setVisible(false);
@@ -76,9 +90,15 @@ export function ExitIntentPopup() {
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-lg shadow-2xl border border-slate-200 dark:border-slate-800/50 p-8 text-center">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Email signup"
+        className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-lg shadow-2xl border border-slate-200 dark:border-slate-800/50 p-8 text-center"
+      >
         {/* Close button */}
         <button
+          ref={closeButtonRef}
           onClick={dismiss}
           className="absolute top-4 right-4 text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
           aria-label="Close"

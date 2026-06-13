@@ -8,14 +8,21 @@ INPUT=$(cat)
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // ""')
 
 # Dangerous patterns to block
+# NOTE: These are best-effort heuristics, not a security boundary.
+# They catch common destructive commands but cannot prevent all evasions.
 DANGEROUS_PATTERNS=(
-  "rm -rf /"
-  "rm -rf \."
-  "rm -rf \*"
-  "git push.*--force.*main"
-  "git push.*--force.*master"
+  "rm\s+.*-[rR].*-[fF].*/"
+  "rm\s+.*-[rR].*-[fF].*\."
+  "rm\s+.*-[rR].*-[fF].*\*"
+  "rm\s+--recursive"
+  "rm\s+-rf\s"
+  "git push.*(-f|--force).*main"
+  "git push.*(-f|--force).*master"
+  "git push.*main.*(-f|--force)"
+  "git push.*master.*(-f|--force)"
   "git reset --hard"
-  "git clean -fd"
+  "git clean\s+.*(-f|--force)"
+  "git clean\s+.*-[a-eghijklmnopqrstuvwxyz]*f"
   "drop database"
   "DROP TABLE"
   "truncate table"
@@ -25,8 +32,8 @@ DANGEROUS_PATTERNS=(
   "mkfs\."
   ":(){ :|:& };:"
   "chmod -R 777"
-  "curl.*| bash"
-  "wget.*| bash"
+  "curl.*\|\s*(ba)?sh"
+  "wget.*\|\s*(ba)?sh"
 )
 
 for pattern in "${DANGEROUS_PATTERNS[@]}"; do

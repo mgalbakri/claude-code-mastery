@@ -181,7 +181,7 @@
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "Review what was accomplished in this session. Check: 1) Were all requested changes made? 2) Were there any errors left unresolved? 3) If site files were modified, was 'npm run build' run? 4) If changes should be committed, were they committed and pushed? If anything is incomplete, set continue=true and explain what remains. $ARGUMENTS",
+            "prompt": "Review what was accomplished in this session. Check: 1) Were all requested changes made? 2) Were there any errors left unresolved? 3) If site files were modified, was 'npm run build' run? 4) If changes should be committed, were they committed and pushed? If anything is incomplete, set continue=true and explain what remains.",
             "timeout": 30,
             "statusMessage": "Verifying session completeness..."
           }

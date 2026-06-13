@@ -54,6 +54,7 @@ SCHEDULER_CONFIG_FILE = "scheduler_config.json"
 NOTIFICATION_LOG_FILE = "notifications.log"
 DEFAULT_CHECK_INTERVAL_HOURS = 24
 LAUNCHD_LABEL = "com.claude-code-mastery.checker"
+LIVE_SITE_URL = "https://agentcodeacademy.com"
 
 
 def _config_path() -> Path:
@@ -513,28 +514,15 @@ def _check_git_health(curriculum_path: str) -> dict:
         status = _git("status", "--porcelain", "curriculum.md", "site/curriculum.md")
         if status.stdout.strip():
             result["uncommitted_changes"] = True
+            result["healthy"] = False
+            dirty_files = status.stdout.strip()
             result["warnings"].append(
-                f"Uncommitted curriculum changes detected: {status.stdout.strip()}"
+                f"Uncommitted curriculum changes detected: {dirty_files}. "
+                f"Please commit or discard these changes before running auto-apply."
             )
             logger.warning(
-                "Curriculum drift detected — committing stale changes before new apply"
+                "Curriculum drift detected — uncommitted changes: %s", dirty_files
             )
-            # Auto-recover: commit the stale changes so they aren't lost
-            _git("add", "curriculum.md", "site/curriculum.md")
-            recover = _git(
-                "commit", "-m",
-                "Auto-commit: recover uncommitted curriculum changes from prior scheduler run"
-            )
-            if recover.returncode == 0:
-                push = _git("push")
-                if push.returncode == 0:
-                    logger.info("Recovered and pushed stale curriculum changes")
-                    result["warnings"].append("Recovered stale changes (committed + pushed)")
-                else:
-                    result["warnings"].append(f"Recovered stale changes (committed) but push failed: {push.stderr.strip()[:100]}")
-            else:
-                result["warnings"].append(f"Failed to recover stale changes: {recover.stderr.strip()[:100]}")
-                result["healthy"] = False
 
         # Check for detached HEAD
         branch = _git("symbolic-ref", "--short", "HEAD")
@@ -682,8 +670,6 @@ def _auto_apply_gaps(
 
 
 # --- Site sync & deploy ---
-
-LIVE_SITE_URL = "https://agentcodeacademy.com"
 
 
 def _git_commit_and_push(curriculum_path: str, applied: list[dict]) -> dict:
@@ -947,9 +933,9 @@ def generate_crontab_entry(interval_hours: int = 24) -> str:
 
     if interval_hours <= 1:
         schedule = "0 * * * *"  # Every hour
-    elif interval_hours <= 6:
+    elif interval_hours < 24:
         schedule = f"0 */{interval_hours} * * *"  # Every N hours
-    elif interval_hours <= 24:
+    elif interval_hours == 24:
         schedule = "0 9 * * *"  # Daily at 9 AM
     else:
         schedule = "0 9 * * 1"  # Weekly on Monday

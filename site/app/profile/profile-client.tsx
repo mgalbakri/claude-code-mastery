@@ -13,7 +13,7 @@ const phaseColors: Record<number, string> = {
 };
 
 function getPhase(week: number): { number: number; name: string } {
-  if (week <= 3) return { number: 1, name: "Foundation" };
+  if (week <= 4) return { number: 1, name: "Foundation" };
   if (week <= 8) return { number: 2, name: "Building" };
   return { number: 3, name: "Mastery" };
 }
