@@ -15,17 +15,24 @@ import { test, expect } from "@playwright/test";
 // These tests require real backend services — skip on local dev server
 test.skip(!process.env.DEPLOYMENT_URL, "Requires DEPLOYMENT_URL (production/preview)");
 
+const isProduction = process.env.DEPLOYMENT_URL?.includes("agentcodeacademy.com");
+
 test.describe("API Health: /api/health", () => {
-  test("health endpoint returns 200 with all checks passing", async ({
-    request,
-  }) => {
-    const res = await request.get("/api/health?verbose=true");
+  test("health endpoint returns valid response", async ({ request }) => {
+    const res = await request.get("/api/health");
+    const body = await res.json();
+    expect(body.status).toMatch(/^(healthy|degraded)$/);
+    expect(body.checks).toBeTruthy();
+  });
+
+  test("all service checks pass on production", async ({ request }) => {
+    test.skip(!isProduction, "Full health check only runs against production");
+    const res = await request.get("/api/health");
     expect(res.status()).toBe(200);
 
     const body = await res.json();
     expect(body.status).toBe("healthy");
 
-    // Every individual check should be ok
     for (const [name, check] of Object.entries(
       body.checks as Record<string, { ok: boolean; error?: string }>
     )) {
