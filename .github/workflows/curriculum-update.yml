@@ -1,0 +1,175 @@
+name: Weekly Curriculum Update
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"  # Every Monday at 9:00 AM UTC
+  workflow_dispatch:
+    inputs:
+      days_back:
+        description: "Days to look back for updates"
+        required: false
+        default: "7"
+      dry_run:
+        description: "Preview changes without applying"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  update-curriculum:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -e .
+
+      - name: Fetch updates and apply
+        id: update
+        env:
+          DAYS_BACK: ${{ github.event.inputs.days_back || '7' }}
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+        run: |
+          python3 - <<'PYEOF'
+          import asyncio, json, os, sys
+          from pathlib import Path
+
+          from claude_code_mastery.sources import fetch_all_updates
+          from claude_code_mastery.analyzer import (
+              analyze_gaps, load_curriculum_file, save_curriculum_file,
+              convert_gaps_to_updates, apply_single_update,
+          )
+          from claude_code_mastery.cache import (
+              create_curriculum_backup, mark_update_applied, get_update_key,
+          )
+
+          CURRICULUM_PATH = str(Path("curriculum.md").resolve())
+          DAYS_BACK = int(os.environ.get("DAYS_BACK", "7"))
+          DRY_RUN = os.environ.get("DRY_RUN", "false") == "true"
+
+          async def main():
+              print(f"Fetching updates from last {DAYS_BACK} days...")
+              fetch_result = await fetch_all_updates(DAYS_BACK)
+              print(f"  Found {len(fetch_result.updates)} updates from {len(fetch_result.sources_checked)} sources")
+
+              if fetch_result.errors:
+                  for e in fetch_result.errors:
+                      print(f"  Warning: {e}", file=sys.stderr)
+
+              curriculum = load_curriculum_file(CURRICULUM_PATH)
+              if not curriculum:
+                  print("ERROR: Could not load curriculum.md", file=sys.stderr)
+                  sys.exit(1)
+
+              gaps = analyze_gaps(fetch_result.updates, curriculum)
+              high_gaps = [g for g in gaps if g.priority == "high"]
+              print(f"  {len(gaps)} total gaps, {len(high_gaps)} high-priority")
+
+              if not high_gaps:
+                  print("No high-priority gaps found. Nothing to update.")
+                  with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+                      f.write("changes=false\n")
+                  return
+
+              if DRY_RUN:
+                  print("\n=== DRY RUN — would apply these changes ===")
+                  for g in high_gaps[:5]:
+                      print(f"  [{g.priority}] {g.update.title[:80]}")
+                      print(f"    → {g.suggestion[:120]}")
+                  with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+                      f.write("changes=false\n")
+                  return
+
+              backup_path = create_curriculum_backup(CURRICULUM_PATH)
+              print(f"  Backup: {backup_path}")
+
+              updates = convert_gaps_to_updates(high_gaps)
+              applied = []
+              for u in updates[:5]:
+                  try:
+                      ok = apply_single_update(u, CURRICULUM_PATH)
+                      if ok:
+                          mark_update_applied(get_update_key(u.title, u.source))
+                          applied.append({"week": u.target_week, "title": u.title, "action": u.action})
+                          print(f"  Applied: [{u.target_week}] {u.title}")
+                  except Exception as e:
+                      print(f"  Failed: {u.title}: {e}", file=sys.stderr)
+
+              if not applied:
+                  print("No updates were successfully applied.")
+                  with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+                      f.write("changes=false\n")
+                  return
+
+              import shutil
+              shutil.copy2(CURRICULUM_PATH, str(Path("site/curriculum.md")))
+              print(f"  Synced to site/curriculum.md")
+
+              summary = ", ".join(f"Week {a['week']}: {a['title'][:50]}" for a in applied)
+              with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+                  f.write(f"changes=true\n")
+                  f.write(f"count={len(applied)}\n")
+                  f.write(f"summary={summary[:200]}\n")
+
+              print(f"\nApplied {len(applied)} update(s). Ready to commit and deploy.")
+
+          asyncio.run(main())
+          PYEOF
+
+      - name: Commit and push
+        if: steps.update.outputs.changes == 'true'
+        env:
+          UPDATE_COUNT: ${{ steps.update.outputs.count }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add curriculum.md site/curriculum.md
+          git commit -m "Auto-update curriculum: ${UPDATE_COUNT} change(s)
+
+          Applied by weekly GitHub Actions workflow.
+          Run: ${RUN_URL}"
+          git push
+
+      - name: Deploy to Vercel
+        if: steps.update.outputs.changes == 'true'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          cd site
+          npx vercel deploy --prod --yes --force --token "$VERCEL_TOKEN"
+
+      - name: Summary
+        if: always()
+        env:
+          CHANGES: ${{ steps.update.outputs.changes }}
+          COUNT: ${{ steps.update.outputs.count }}
+          SUMMARY: ${{ steps.update.outputs.summary }}
+        run: |
+          if [ "$CHANGES" = "true" ]; then
+            echo "### Curriculum updated" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "Applied **${COUNT}** update(s) and deployed to production." >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "Changes: ${SUMMARY}" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "### No updates needed" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "Curriculum is up to date. No changes applied." >> "$GITHUB_STEP_SUMMARY"
+          fi
