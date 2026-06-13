@@ -10,9 +10,9 @@ const requiredServerVars = [
   "LEMON_SQUEEZY_WEBHOOK_SECRET",
 ];
 
-// Only enforce on Vercel (VERCEL=1). Local `next build` sets NODE_ENV=production
-// but shouldn't require secrets — those are only needed at runtime.
-if (process.env.VERCEL) {
+// Only enforce on Vercel production builds. Preview deployments may not have
+// all secrets configured, and that's fine — they're runtime-only.
+if (process.env.VERCEL_ENV === "production") {
   const missing = requiredServerVars.filter((v) => !process.env[v]);
   if (missing.length > 0) {
     throw new Error(
