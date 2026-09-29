@@ -495,6 +495,11 @@ Several Claude Code releases shipped this week:
 
 
 
+
+**Claude Code npm 2.1.285** (added 2026-09-29)
+@anthropic-ai/claude-code@2.1.285 published to...
+Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.285
+
 ---
 
 ### WEEK 2: Git & Version Control
@@ -4205,3 +4210,21 @@ This pattern complements the agent orchestration and parallel session techniques
 **Product** (added Feb 17, 20)
 Sonnet 4.6 delivers frontier performance across coding, agents, and professional work at scale.
 Source: https://www.anthropic.com/news/claude-sonnet-4-6
+
+
+---
+
+### Appendix: Announcements
+
+**Announcements** (added Sep 1, 202)
+Our most advanced models for coding and knowledge work. Their research capabilities also offer an early glimpse of how AI models will contribute to...
+Source: https://www.anthropic.com/claude-fable-and-mythos-5-1
+
+
+---
+
+### Appendix: Announcements
+
+**Announcements** (added Sep 22, 20)
+Opus 5.5 performs at the level of Claude Fable 5.1 on most work and costs 40% less to run than Opus 5.
+Source: https://www.anthropic.com/claude-opus-5-5
