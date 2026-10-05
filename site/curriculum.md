@@ -500,6 +500,11 @@ Several Claude Code releases shipped this week:
 @anthropic-ai/claude-code@2.1.285 published to...
 Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.285
 
+
+**Claude Code npm 2.1.289 (latest)** (added 2026-10-03)
+@anthropic-ai/claude-code@2.1.289 published to...
+Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.289
+
 ---
 
 ### WEEK 2: Git & Version Control
@@ -4228,3 +4233,12 @@ Source: https://www.anthropic.com/claude-fable-and-mythos-5-1
 **Announcements** (added Sep 22, 20)
 Opus 5.5 performs at the level of Claude Fable 5.1 on most work and costs 40% less to run than Opus 5.
 Source: https://www.anthropic.com/claude-opus-5-5
+
+
+---
+
+### Appendix: Introducing Claude Sonnet 5.5
+
+**Introducing Claude Sonnet 5.5** (added Sep 28, 20)
+A clear upgrade over Sonnet 5 that runs 30% faster and costs up to 30% less for most work.
+Source: https://www.anthropic.com/claude-sonnet-5-5
