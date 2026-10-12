@@ -505,6 +505,11 @@ Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.285
 @anthropic-ai/claude-code@2.1.289 published to...
 Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.289
 
+
+**Claude Code npm 2.1.296 (latest)** (added 2026-10-09)
+@anthropic-ai/claude-code@2.1.296 published to...
+Source: https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.296
+
 ---
 
 ### WEEK 2: Git & Version Control
@@ -4242,3 +4247,12 @@ Source: https://www.anthropic.com/claude-opus-5-5
 **Introducing Claude Sonnet 5.5** (added Sep 28, 20)
 A clear upgrade over Sonnet 5 that runs 30% faster and costs up to 30% less for most work.
 Source: https://www.anthropic.com/claude-sonnet-5-5
+
+
+---
+
+### Appendix: Announcements
+
+**Announcements** (added Oct 7, 202)
+Our fastest, cheapest, and most capable small model yet. It’s designed for high-volume, cost-sensitive work.
+Source: https://www.anthropic.com/claude-haiku-5-5
